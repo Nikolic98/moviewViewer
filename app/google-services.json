@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "585423914428",
+    "project_id": "movieviewerapp",
+    "storage_bucket": "movieviewerapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:585423914428:android:15b81d56712fff7c0597b9",
+        "android_client_info": {
+          "package_name": "com.example.movieviewer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "585423914428-vq6un168dpl639to7kcf9cb7vriuctrm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfD62iGGRaKBqhn-2BWAA9KQZWotMSEi0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "585423914428-vq6un168dpl639to7kcf9cb7vriuctrm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
