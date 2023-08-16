@@ -1,3 +1,4 @@
 <resources>
+    <string name="shared_prefs" translatable="false">application_preferences</string>
     <string name="app_name">Movie Viewer</string>
 </resources>
