@@ -1,6 +1,8 @@
 package com.example.movieviewer.modules
 
 import androidx.lifecycle.ViewModel
+import com.example.movieviewer.viewModels.CreateAccountViewModel
+import com.example.movieviewer.viewModels.LoginViewModel
 import com.example.movieviewer.viewModels.MainViewModel
 import com.example.movieviewer.viewModels.ViewModelKey
 import dagger.Binds
@@ -17,4 +19,14 @@ abstract class ViewModelModules {
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     abstract fun provideMainViewModel(viewModel: MainViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginViewModel::class)
+    abstract fun provideLoginViewModel(viewModel: LoginViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CreateAccountViewModel::class)
+    abstract fun provideCreateAccountViewModel(viewModel: CreateAccountViewModel): ViewModel
 }

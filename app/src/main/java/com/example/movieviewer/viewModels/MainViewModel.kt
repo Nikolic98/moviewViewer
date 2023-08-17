@@ -1,8 +1,10 @@
 package com.example.movieviewer.viewModels
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import javax.inject.Inject
 
 /**
@@ -10,8 +12,13 @@ import javax.inject.Inject
  */
 class MainViewModel @Inject constructor() : ViewModel() {
 
-    fun testFun() {
-        viewModelScope.launch {
-        }
+    private lateinit var auth: FirebaseAuth
+
+    val successResult by lazy { MutableLiveData<Unit>() }
+
+    fun logoutUser() {
+        auth = Firebase.auth
+        auth.signOut()
+        successResult.postValue(Unit)
     }
 }

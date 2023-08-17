@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".MovieViewerApplication"
         android:allowBackup="true"
@@ -13,11 +15,10 @@
         android:theme="@style/Theme.MovieViewer"
         tools:targetApi="31">
         <activity
-            android:name=".activities.ui.login.LoginTestActivity"
-            android:exported="false"
-            android:label="@string/title_activity_login"/>
+            android:name=".activities.login.CreateAccountActivity"
+            android:exported="false"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.StartupActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -25,6 +26,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.login.LoginActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activities.ui.login.LoginTestActivity"
+            android:exported="false"
+            android:label="@string/title_activity_login"/>
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>

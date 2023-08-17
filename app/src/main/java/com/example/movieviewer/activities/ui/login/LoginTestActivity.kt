@@ -12,19 +12,19 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
 import com.example.movieviewer.R
-import com.example.movieviewer.databinding.ActivityLoginBinding
+import com.example.movieviewer.databinding.ActivityTestLoginBinding
 import com.example.movieviewer.viewModels.LoggedInUserView
 import com.example.movieviewer.viewModels.LoginTestViewModel
 
 class LoginTestActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginTestViewModel
-    private lateinit var binding: ActivityLoginBinding
+    private lateinit var binding: ActivityTestLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityLoginBinding.inflate(layoutInflater)
+        binding = ActivityTestLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val username = binding.username

@@ -2,6 +2,9 @@ package com.example.movieviewer.modules
 
 import com.example.movieviewer.MainActivity
 import com.example.movieviewer.activities.BoundBaseActivity
+import com.example.movieviewer.activities.login.CreateAccountActivity
+import com.example.movieviewer.activities.login.LoginActivity
+import com.example.movieviewer.fragments.BoundBaseFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -12,6 +15,12 @@ import javax.inject.Singleton
 @Component(modules = [ViewModelFactoryModule::class, ViewModelModules::class])
 interface AppComponent {
 
+    // Activities
     fun inject(boundBaseActivity: BoundBaseActivity)
     fun inject(mainActivity: MainActivity)
+    fun inject(loginActivity: LoginActivity)
+    fun inject(createAccountActivity: CreateAccountActivity)
+
+    // Fragments
+    fun inject(boundBaseFragment: BoundBaseFragment)
 }
