@@ -5,6 +5,10 @@ import com.example.movieviewer.activities.BoundBaseActivity
 import com.example.movieviewer.activities.login.CreateAccountActivity
 import com.example.movieviewer.activities.login.LoginActivity
 import com.example.movieviewer.fragments.BoundBaseFragment
+import com.example.movieviewer.fragments.HomeFragment
+import com.example.movieviewer.fragments.ProfileFragment
+import com.example.movieviewer.fragments.SearchFragment
+import com.example.movieviewer.fragments.WatchListFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -23,4 +27,8 @@ interface AppComponent {
 
     // Fragments
     fun inject(boundBaseFragment: BoundBaseFragment)
+    fun inject(homeFragment: HomeFragment)
+    fun inject(searchFragment: SearchFragment)
+    fun inject(watchListFragment: WatchListFragment)
+    fun inject(profileFragment: ProfileFragment)
 }
