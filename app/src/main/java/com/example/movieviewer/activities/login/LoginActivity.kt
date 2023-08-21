@@ -36,8 +36,8 @@ class LoginActivity : BoundBaseActivity() {
         binding.apply {
             loginBtn.setOnClickListener {
                 viewModel.loginUser(
-                        username.text.trim().toString(),
-                        password.text.trim().toString(),
+                        usernameInput.text?.trim().toString(),
+                        passwordInput.text?.trim().toString(),
                 )
             }
             registerBtn.setOnClickListener {
@@ -55,13 +55,15 @@ class LoginActivity : BoundBaseActivity() {
             errorResult.observe(this@LoginActivity) {
                 longToast(it)
             }
+
+            loginFormState.observe(this@LoginActivity) {
+                if (it.usernameError != null) {
+                    binding.usernameInput.error = getString(it.usernameError)
+                }
+                if (it.passwordError != null) {
+                    binding.passwordInput.error = getString(it.passwordError)
+                }
+            }
         }
     }
-//
-//    fun replaceFragment(fragment: Fragment) {
-//        val fragmentManager = supportFragmentManager
-//        val fragmentTransaction = fragmentManager.beginTransaction()
-//        fragmentTransaction.replace(binding.container.id, fragment)
-//        fragmentTransaction.commit()
-//    }
 }
