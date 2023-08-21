@@ -1,11 +1,13 @@
 package com.example.movieviewer.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieviewer.MovieViewerApplication
+import com.example.movieviewer.activities.login.LoginActivity
 import com.example.movieviewer.databinding.FragmentProfileBinding
 import com.example.movieviewer.viewModels.ProfileViewModel
 import com.example.movieviewer.viewModels.ViewModelFactory
@@ -27,15 +29,28 @@ class ProfileFragment : BoundBaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
+            savedInstanceState: Bundle?): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this,
                 viewModelFactory)[ProfileViewModel::class.java.name, ProfileViewModel::class.java]
+        initObservers()
+
+        binding.logoutBtn.setOnClickListener {
+            viewModel.logoutUser()
+        }
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun initObservers() {
+        viewModel.apply {
+            text.observe(viewLifecycleOwner) {
+                binding.text.text = it
+            }
+            successResult.observe(viewLifecycleOwner) {
+                startActivity(Intent(activity, LoginActivity::class.java))
+                activity?.finish()
+            }
+        }
     }
 
     override fun onDestroy() {

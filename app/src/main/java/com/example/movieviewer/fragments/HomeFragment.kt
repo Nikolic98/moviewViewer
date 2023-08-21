@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieviewer.MovieViewerApplication
 import com.example.movieviewer.databinding.FragmentHomeBinding
@@ -27,15 +28,16 @@ class HomeFragment : BoundBaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
+            savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this,
                 viewModelFactory)[HomeViewModel::class.java.name, HomeViewModel::class.java]
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        val textView: TextView = binding.text
+        viewModel.text.observe(viewLifecycleOwner) {
+            textView.text = it
+        }
+        return binding.root
     }
 
     override fun onDestroy() {
