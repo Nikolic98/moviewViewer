@@ -4,18 +4,17 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.movieviewer.R
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.example.movieviewer.repositories.LoginRepository
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
  * @author Marko Nikolic on 17.8.23.
  */
-class LoginViewModel @Inject constructor() : ViewModel() {
-
-    private lateinit var auth: FirebaseAuth
+class LoginViewModel @Inject constructor(
+        private val loginRepository: LoginRepository) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
@@ -28,18 +27,14 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         if (loginFormState.value?.isDataValid == false) {
             return
         }
-        auth = Firebase.auth
-        auth.signInWithEmailAndPassword(username, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-//                    val user = auth.currentUser
-//                    updateUI(user)
-                    successResult.postValue(Unit)
-                } else {
-                    errorResult.postValue(task.exception?.message)
-                }
+        viewModelScope.launch {
+            try {
+                loginRepository.loginUser(username, password)
+                successResult.postValue(Unit)
+            } catch (t: Throwable) {
+                errorResult.postValue(t.localizedMessage)
             }
+        }
     }
 
     private fun usernameAndPasswordValidation(username: String, password: String) {

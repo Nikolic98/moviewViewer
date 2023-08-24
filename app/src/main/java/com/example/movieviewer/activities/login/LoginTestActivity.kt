@@ -1,4 +1,4 @@
-package com.example.movieviewer.activities.ui.login
+package com.example.movieviewer.activities.login
 
 import android.app.Activity
 import androidx.lifecycle.Observer

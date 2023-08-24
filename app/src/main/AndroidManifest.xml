@@ -30,7 +30,7 @@
             android:name=".activities.login.LoginActivity"
             android:exported="false"/>
         <activity
-            android:name=".activities.ui.login.LoginTestActivity"
+            android:name=".activities.login.LoginTestActivity"
             android:exported="false"
             android:label="@string/title_activity_login"/>
         <activity

@@ -1,6 +1,9 @@
-package com.example.movieviewer.data
+package com.example.movieviewer.repositories
 
-import com.example.movieviewer.data.models.LoggedInUser
+import com.example.movieviewer.dataSources.LoginDataSource
+import com.example.movieviewer.models.LoggedInUser
+import com.example.movieviewer.viewModels.results.ResultState
+import com.example.movieviewer.viewModels.results.SuccessResultState
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -27,12 +30,11 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
-        // handle login
-        val result = dataSource.login(username, password)
+    suspend fun loginUser(username: String, password: String): ResultState {
+        val result = dataSource.loginUser(username, password)
 
-        if (result is Result.Success) {
-            setLoggedInUser(result.data)
+        if (result is SuccessResultState<*>) {
+            setLoggedInUser(result.result as LoggedInUser)
         }
 
         return result

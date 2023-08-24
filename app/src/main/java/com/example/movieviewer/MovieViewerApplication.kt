@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LifecycleObserver
 import com.example.movieviewer.modules.AppComponent
 import com.example.movieviewer.modules.DaggerAppComponent
+import com.example.movieviewer.modules.DataSourceModule
+import com.example.movieviewer.modules.RepositoryModule
 import com.example.movieviewer.utils.PrefHelper
 
 /**
@@ -18,6 +20,7 @@ class MovieViewerApplication : Application(), LifecycleObserver {
         operator fun get(context: Context): MovieViewerApplication {
             return context.applicationContext as MovieViewerApplication
         }
+
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         }
@@ -29,8 +32,12 @@ class MovieViewerApplication : Application(), LifecycleObserver {
         initAppComponent()
         PrefHelper.initPrefs(applicationContext, getString(R.string.shared_prefs), MODE_PRIVATE)
     }
+
     private fun initAppComponent() {
-        appComponent = DaggerAppComponent.builder().build()
+        appComponent = DaggerAppComponent.builder()
+            .dataSourceModule(DataSourceModule())
+            .repositoryModule(RepositoryModule())
+            .build()
     }
 
     fun getAppComponent(): AppComponent {
