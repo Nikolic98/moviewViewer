@@ -13,21 +13,32 @@ import com.example.movieviewer.viewModels.results.SuccessResultState
 class LoginRepository(val dataSource: LoginDataSource) {
 
     // in-memory cache of the loggedInUser object
-    var user: LoggedInUser? = null
+    private var currentUser: LoggedInUser? = null
         private set
 
-    val isLoggedIn: Boolean
-        get() = user != null
+    val userEmail: String?
+        get() =
+            if (currentUser != null) {
+                currentUser?.email
+            } else {
+                getCurrentUser().email
+            }
 
     init {
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
-        user = null
+        currentUser = null
     }
 
     fun logout() {
-        user = null
+        currentUser = null
         dataSource.logout()
+     }
+
+    private fun getCurrentUser(): LoggedInUser {
+        val user = dataSource.getCurrentUser()
+        setLoggedInUser(user)
+        return user
     }
 
     suspend fun loginUser(username: String, password: String): ResultState {
@@ -41,7 +52,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
     }
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {
-        this.user = loggedInUser
+        this.currentUser = loggedInUser
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }

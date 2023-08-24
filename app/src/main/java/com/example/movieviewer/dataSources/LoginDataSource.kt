@@ -7,7 +7,6 @@ import com.example.movieviewer.viewModels.results.SuccessResultState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import java.util.UUID
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -17,20 +16,18 @@ import kotlin.coroutines.suspendCoroutine
  */
 class LoginDataSource {
 
-    private lateinit var auth: FirebaseAuth
+    private var auth: FirebaseAuth = Firebase.auth
 
     suspend fun loginUser(username: String, password: String): ResultState {
         return suspendCoroutine { continuation ->
-            auth = Firebase.auth
             auth.signInWithEmailAndPassword(username, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        //                    val user = auth.currentUser
-                        //                    updateUI(user)
-                        // todo still in test
-                        val fakeUser = LoggedInUser(UUID.randomUUID().toString(), "Jane Doe")
-                        continuation.resume(SuccessResultState(fakeUser))
+                        val currentUser = auth.currentUser
+                        val user = LoggedInUser(
+                                currentUser!!.uid,
+                                currentUser.email!!)
+                        continuation.resume(SuccessResultState(user))
                     } else {
                         continuation.resumeWithException(
                                 AppErrorObject(task.exception?.message!!).joinForThrowable())
@@ -40,6 +37,13 @@ class LoginDataSource {
     }
 
     fun logout() {
-        // TODO: revoke authentication
+        auth.signOut()
+    }
+
+    fun getCurrentUser(): LoggedInUser {
+        val currentUser = auth.currentUser
+        return LoggedInUser(
+                currentUser!!.uid,
+                currentUser.email!!)
     }
 }
