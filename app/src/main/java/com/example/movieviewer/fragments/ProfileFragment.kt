@@ -35,6 +35,8 @@ class ProfileFragment : BoundBaseFragment() {
                 viewModelFactory)[ProfileViewModel::class.java.name, ProfileViewModel::class.java]
         initObservers()
 
+        viewModel.getCurrentUser()
+
         binding.logoutBtn.setOnClickListener {
             viewModel.logoutUser()
         }

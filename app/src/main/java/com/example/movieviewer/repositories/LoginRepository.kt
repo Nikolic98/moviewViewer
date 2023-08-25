@@ -2,15 +2,19 @@ package com.example.movieviewer.repositories
 
 import com.example.movieviewer.dataSources.LoginDataSource
 import com.example.movieviewer.models.LoggedInUser
+import com.example.movieviewer.models.User
+import com.example.movieviewer.viewModels.results.ErrorResultState
 import com.example.movieviewer.viewModels.results.ResultState
 import com.example.movieviewer.viewModels.results.SuccessResultState
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Class that requests authentication and user information from the remote data source and
  * maintains an in-memory cache of login status and user credentials information.
  */
 
-class LoginRepository(val dataSource: LoginDataSource) {
+class LoginRepository(private val dataSource: LoginDataSource) {
 
     // in-memory cache of the loggedInUser object
     private var currentUser: LoggedInUser? = null
@@ -21,7 +25,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
             if (currentUser != null) {
                 currentUser?.email
             } else {
-                getCurrentUser().email
+                ""
             }
 
     init {
@@ -33,12 +37,12 @@ class LoginRepository(val dataSource: LoginDataSource) {
     fun logout() {
         currentUser = null
         dataSource.logout()
-     }
+    }
 
-    private fun getCurrentUser(): LoggedInUser {
-        val user = dataSource.getCurrentUser()
-        setLoggedInUser(user)
-        return user
+    suspend fun getCurrentUser() = dataSource.getCurrentUser()
+
+    suspend fun createNewUser(name: String, username: String, password: String): ResultState {
+        return dataSource.createNewUser(name, username, password)
     }
 
     suspend fun loginUser(username: String, password: String): ResultState {
@@ -47,7 +51,6 @@ class LoginRepository(val dataSource: LoginDataSource) {
         if (result is SuccessResultState<*>) {
             setLoggedInUser(result.result as LoggedInUser)
         }
-
         return result
     }
 

@@ -38,6 +38,7 @@ class CreateAccountActivity : BoundBaseActivity() {
         initObservers()
         binding.registerButton.setOnClickListener {
             viewModel.createUser(
+                    binding.name.text.trim().toString(),
                     binding.username.text.trim().toString(),
                     binding.password.text.trim().toString(),
             )
