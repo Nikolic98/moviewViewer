@@ -17,9 +17,7 @@ class ProfileViewModel @Inject constructor(
         private val loginRepository: LoginRepository) : ViewModel() {
     val successResult by lazy { MutableLiveData<Unit>() }
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is profile Fragment" + loginRepository.userEmail
-    }
+    private val _text = MutableLiveData<String>()
     val text: LiveData<String> = _text
 
     fun getCurrentUser() {

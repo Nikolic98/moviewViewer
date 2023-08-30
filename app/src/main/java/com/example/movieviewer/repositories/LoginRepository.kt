@@ -2,12 +2,8 @@ package com.example.movieviewer.repositories
 
 import com.example.movieviewer.dataSources.LoginDataSource
 import com.example.movieviewer.models.LoggedInUser
-import com.example.movieviewer.models.User
-import com.example.movieviewer.viewModels.results.ErrorResultState
 import com.example.movieviewer.viewModels.results.ResultState
 import com.example.movieviewer.viewModels.results.SuccessResultState
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -19,14 +15,6 @@ class LoginRepository(private val dataSource: LoginDataSource) {
     // in-memory cache of the loggedInUser object
     private var currentUser: LoggedInUser? = null
         private set
-
-    val userEmail: String?
-        get() =
-            if (currentUser != null) {
-                currentUser?.email
-            } else {
-                ""
-            }
 
     init {
         // If user credentials will be cached in local storage, it is recommended it be encrypted
@@ -54,6 +42,7 @@ class LoginRepository(private val dataSource: LoginDataSource) {
         return result
     }
 
+    // todo maybe remove this ?
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {
         this.currentUser = loggedInUser
         // If user credentials will be cached in local storage, it is recommended it be encrypted
