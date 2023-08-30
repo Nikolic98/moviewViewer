@@ -64,4 +64,7 @@ dependencies {
 
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
