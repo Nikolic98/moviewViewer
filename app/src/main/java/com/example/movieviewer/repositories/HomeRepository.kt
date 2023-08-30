@@ -5,4 +5,7 @@ import com.example.movieviewer.dataSources.HomeDataSource
 /**
  * @author Marko Nikolic on 30.8.23.
  */
-class HomeRepository(private val dataSource: HomeDataSource) {}
+class HomeRepository(private val dataSource: HomeDataSource) {
+
+    suspend fun getMovies() = dataSource.getMovies()
+}

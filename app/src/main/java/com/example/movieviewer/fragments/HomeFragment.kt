@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieviewer.MovieViewerApplication
 import com.example.movieviewer.databinding.FragmentHomeBinding
+import com.example.movieviewer.longToast
 import com.example.movieviewer.viewModels.HomeViewModel
 import com.example.movieviewer.viewModels.ViewModelFactory
 import javax.inject.Inject
@@ -37,8 +38,13 @@ class HomeFragment : BoundBaseFragment() {
     }
 
     private fun initObservers() {
-        viewModel.text.observe(viewLifecycleOwner) {
-            binding.text.text = it
+        viewModel.getMovies()
+        viewModel.movieList.observe(viewLifecycleOwner) {
+            // todo
+        }
+
+        viewModel.errorResult.observe(viewLifecycleOwner) {
+            activity?.longToast(it)
         }
     }
 
