@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieviewer.MovieViewerApplication
 import com.example.movieviewer.databinding.FragmentHomeBinding
@@ -33,11 +32,14 @@ class HomeFragment : BoundBaseFragment() {
         viewModel = ViewModelProvider(this,
                 viewModelFactory)[HomeViewModel::class.java.name, HomeViewModel::class.java]
 
-        val textView: TextView = binding.text
-        viewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        initObservers()
         return binding.root
+    }
+
+    private fun initObservers() {
+        viewModel.text.observe(viewLifecycleOwner) {
+            binding.text.text = it
+        }
     }
 
     override fun onDestroy() {

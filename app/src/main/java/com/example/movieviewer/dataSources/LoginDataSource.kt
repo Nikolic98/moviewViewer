@@ -3,20 +3,18 @@ package com.example.movieviewer.dataSources
 import com.example.movieviewer.content.AppErrorObject
 import com.example.movieviewer.models.LoggedInUser
 import com.example.movieviewer.models.User
-import com.example.movieviewer.viewModels.results.ErrorResultState
 import com.example.movieviewer.viewModels.results.ResultState
 import com.example.movieviewer.viewModels.results.SuccessResultState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 /**
- * Class that handles authentication w/ login credentials and retrieves user information.
+ * @author Marko Nikolic on 24.8.23.
  */
 class LoginDataSource {
 

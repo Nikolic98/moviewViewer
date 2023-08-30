@@ -6,8 +6,7 @@ import com.example.movieviewer.viewModels.results.ResultState
 import com.example.movieviewer.viewModels.results.SuccessResultState
 
 /**
- * Class that requests authentication and user information from the remote data source and
- * maintains an in-memory cache of login status and user credentials information.
+ * @author Marko Nikolic on 24.8.23.
  */
 
 class LoginRepository(private val dataSource: LoginDataSource) {

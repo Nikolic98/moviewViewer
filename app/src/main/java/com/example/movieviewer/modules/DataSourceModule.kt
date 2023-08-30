@@ -1,5 +1,6 @@
 package com.example.movieviewer.modules
 
+import com.example.movieviewer.dataSources.HomeDataSource
 import com.example.movieviewer.dataSources.LoginDataSource
 import dagger.Module
 import dagger.Provides
@@ -14,4 +15,8 @@ class DataSourceModule {
     @Provides
     @Singleton
     fun provideLoginDataSource() = LoginDataSource()
+
+    @Provides
+    @Singleton
+    fun provideHomeDataSource() = HomeDataSource()
 }

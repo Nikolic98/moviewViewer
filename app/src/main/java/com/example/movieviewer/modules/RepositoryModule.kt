@@ -1,6 +1,8 @@
 package com.example.movieviewer.modules
 
+import com.example.movieviewer.dataSources.HomeDataSource
 import com.example.movieviewer.dataSources.LoginDataSource
+import com.example.movieviewer.repositories.HomeRepository
 import com.example.movieviewer.repositories.LoginRepository
 import dagger.Module
 import dagger.Provides
@@ -16,4 +18,8 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideLoginRepository(loginDataSource: LoginDataSource) = LoginRepository(loginDataSource)
+
+    @Provides
+    @Singleton
+    fun provideHomeRepository(homeDataSource: HomeDataSource) = HomeRepository(homeDataSource)
 }
