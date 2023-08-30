@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieviewer.MovieViewerApplication
+import com.example.movieviewer.adapters.MovieCardAdapter
 import com.example.movieviewer.databinding.FragmentHomeBinding
 import com.example.movieviewer.longToast
 import com.example.movieviewer.viewModels.HomeViewModel
@@ -40,7 +41,13 @@ class HomeFragment : BoundBaseFragment() {
     private fun initObservers() {
         viewModel.getMovies()
         viewModel.movieList.observe(viewLifecycleOwner) {
-            // todo
+            binding.recyclerView.adapter = MovieCardAdapter(it,
+                    object : MovieCardAdapter.ItemClickListener {
+                        override fun onItemClick(id: String) {
+                            // todo open item details
+                            activity?.longToast("Item: $id")
+                        }
+                    })
         }
 
         viewModel.errorResult.observe(viewLifecycleOwner) {
