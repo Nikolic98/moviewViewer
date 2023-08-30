@@ -4,19 +4,20 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.movieviewer.databinding.CardLayoutBinding
+import com.example.movieviewer.databinding.BannerLayoutBinding
 import com.example.movieviewer.interfaces.ItemClickListener
-import com.example.movieviewer.models.Movie
+import com.example.movieviewer.models.Banner
 
 /**
  * @author Marko Nikolic on 30.8.23.
  */
-class MovieCardAdapter(
-        private val itemList: List<Movie>,
-        private val itemClickListener: ItemClickListener) : RecyclerView.Adapter<MovieCardAdapter.ViewHolder>() {
+class BannerAdapter(
+        private val itemList: List<Banner>,
+        private val itemClickListener: ItemClickListener) : RecyclerView.Adapter<BannerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = CardLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = BannerLayoutBinding.inflate(LayoutInflater.from(parent.context), parent,
+                false)
         return ViewHolder(binding)
     }
 
@@ -27,15 +28,15 @@ class MovieCardAdapter(
 
     override fun getItemCount() = itemList.size
 
-    inner class ViewHolder(private val binding: CardLayoutBinding) : RecyclerView.ViewHolder(
+    inner class ViewHolder(private val binding: BannerLayoutBinding) : RecyclerView.ViewHolder(
             binding.root) {
-        fun bind(movie: Movie) {
+        fun bind(banner: Banner) {
             binding.apply {
                 Glide.with(root)
-                    .load(movie.imageUrl)
+                    .load(banner.imageUrl)
                     .centerCrop()
                     .into(image)
-                root.setOnClickListener { itemClickListener.onItemClick(movie.id) }
+                root.setOnClickListener { itemClickListener.onItemClick(banner.id) }
             }
         }
     }

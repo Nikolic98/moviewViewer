@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieviewer.MovieViewerApplication
+import com.example.movieviewer.adapters.BannerAdapter
 import com.example.movieviewer.adapters.MovieCardAdapter
 import com.example.movieviewer.databinding.FragmentHomeBinding
+import com.example.movieviewer.interfaces.ItemClickListener
 import com.example.movieviewer.longToast
 import com.example.movieviewer.viewModels.HomeViewModel
 import com.example.movieviewer.viewModels.ViewModelFactory
@@ -35,23 +37,39 @@ class HomeFragment : BoundBaseFragment() {
                 viewModelFactory)[HomeViewModel::class.java.name, HomeViewModel::class.java]
 
         initObservers()
+        viewModel.apply {
+            getBanner()
+            getMovies()
+        }
         return binding.root
     }
 
     private fun initObservers() {
-        viewModel.getMovies()
-        viewModel.movieList.observe(viewLifecycleOwner) {
-            binding.recyclerView.adapter = MovieCardAdapter(it,
-                    object : MovieCardAdapter.ItemClickListener {
-                        override fun onItemClick(id: String) {
-                            // todo open item details
-                            activity?.longToast("Item: $id")
-                        }
-                    })
-        }
+        viewModel.apply {
+            
+            // refactor from recyclerView to ViewPager
+            banner.observe(viewLifecycleOwner) {
+                binding.recyclerViewBanner.adapter = BannerAdapter(it,
+                        object : ItemClickListener {
+                            override fun onItemClick(id: String) {
+                                // todo open item details
+                                activity?.longToast("Item: $id")
+                            }
+                        })
+            }
+            movieList.observe(viewLifecycleOwner) {
+                binding.recyclerView.adapter = MovieCardAdapter(it,
+                        object : ItemClickListener {
+                            override fun onItemClick(id: String) {
+                                // todo open item details
+                                activity?.longToast("Item: $id")
+                            }
+                        })
+            }
 
-        viewModel.errorResult.observe(viewLifecycleOwner) {
-            activity?.longToast(it)
+            errorResult.observe(viewLifecycleOwner) {
+                activity?.longToast(it)
+            }
         }
     }
 
