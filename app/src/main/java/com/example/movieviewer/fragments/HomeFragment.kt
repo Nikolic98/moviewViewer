@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieviewer.MovieViewerApplication
+import com.example.movieviewer.activities.MovieDetailsActivity
 import com.example.movieviewer.adapters.BannerAdapter
 import com.example.movieviewer.adapters.MovieCardAdapter
 import com.example.movieviewer.databinding.FragmentHomeBinding
@@ -52,8 +53,7 @@ class HomeFragment : BoundBaseFragment() {
                 binding.recyclerViewBanner.adapter = BannerAdapter(it,
                         object : ItemClickListener {
                             override fun onItemClick(id: String) {
-                                // todo open item details
-                                activity?.longToast("Item: $id")
+                                startDetails(id)
                             }
                         })
             }
@@ -61,8 +61,7 @@ class HomeFragment : BoundBaseFragment() {
                 binding.recyclerView.adapter = MovieCardAdapter(it,
                         object : ItemClickListener {
                             override fun onItemClick(id: String) {
-                                // todo open item details
-                                activity?.longToast("Item: $id")
+                                startDetails(id)
                             }
                         })
             }
@@ -71,6 +70,10 @@ class HomeFragment : BoundBaseFragment() {
                 activity?.longToast(it)
             }
         }
+    }
+
+    private fun startDetails(movieId: String) {
+        startActivity(MovieDetailsActivity.newInstance(requireActivity(), movieId))
     }
 
     override fun onDestroy() {

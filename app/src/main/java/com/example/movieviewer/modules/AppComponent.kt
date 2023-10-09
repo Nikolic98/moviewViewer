@@ -2,9 +2,9 @@ package com.example.movieviewer.modules
 
 import com.example.movieviewer.MainActivity
 import com.example.movieviewer.activities.BoundBaseActivity
+import com.example.movieviewer.activities.MovieDetailsActivity
 import com.example.movieviewer.activities.login.CreateAccountActivity
 import com.example.movieviewer.activities.login.LoginActivity
-import com.example.movieviewer.repositories.LoginRepository
 import com.example.movieviewer.fragments.BoundBaseFragment
 import com.example.movieviewer.fragments.HomeFragment
 import com.example.movieviewer.fragments.ProfileFragment
@@ -30,6 +30,7 @@ interface AppComponent {
     fun inject(mainActivity: MainActivity)
     fun inject(loginActivity: LoginActivity)
     fun inject(createAccountActivity: CreateAccountActivity)
+    fun inject(movieDetailsActivity: MovieDetailsActivity)
 
     // Fragments
     fun inject(boundBaseFragment: BoundBaseFragment)
@@ -37,7 +38,4 @@ interface AppComponent {
     fun inject(searchFragment: SearchFragment)
     fun inject(watchListFragment: WatchListFragment)
     fun inject(profileFragment: ProfileFragment)
-
-    // Repositories
-    fun inject(loginRepository: LoginRepository)
 }

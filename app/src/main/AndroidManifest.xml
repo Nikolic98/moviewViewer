@@ -15,9 +15,6 @@
         android:theme="@style/Theme.MovieViewer"
         tools:targetApi="31">
         <activity
-            android:name=".activities.login.CreateAccountActivity"
-            android:exported="false"/>
-        <activity
             android:name=".activities.StartupActivity"
             android:exported="true">
             <intent-filter>
@@ -36,6 +33,11 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"/>
+        <activity
+            android:name=".activities.login.CreateAccountActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activities.MovieDetailsActivity"
+            android:exported="false"/>
     </application>
-
 </manifest>

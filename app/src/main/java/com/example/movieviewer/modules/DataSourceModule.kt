@@ -2,6 +2,7 @@ package com.example.movieviewer.modules
 
 import com.example.movieviewer.dataSources.HomeDataSource
 import com.example.movieviewer.dataSources.LoginDataSource
+import com.example.movieviewer.dataSources.MovieDataSource
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -19,4 +20,8 @@ class DataSourceModule {
     @Provides
     @Singleton
     fun provideHomeDataSource() = HomeDataSource()
+
+    @Provides
+    @Singleton
+    fun provideMovieDataSource() = MovieDataSource()
 }

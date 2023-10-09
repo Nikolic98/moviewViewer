@@ -5,6 +5,7 @@ import com.example.movieviewer.viewModels.CreateAccountViewModel
 import com.example.movieviewer.viewModels.HomeViewModel
 import com.example.movieviewer.viewModels.LoginViewModel
 import com.example.movieviewer.viewModels.MainViewModel
+import com.example.movieviewer.viewModels.MovieDetailsViewModel
 import com.example.movieviewer.viewModels.ProfileViewModel
 import com.example.movieviewer.viewModels.SearchViewModel
 import com.example.movieviewer.viewModels.ViewModelKey
@@ -53,4 +54,9 @@ abstract class ViewModelModules {
     @IntoMap
     @ViewModelKey(ProfileViewModel::class)
     abstract fun provideProfileViewModel(viewModel: ProfileViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MovieDetailsViewModel::class)
+    abstract fun provideMovieDetailsViewModel(viewModel: MovieDetailsViewModel): ViewModel
 }
