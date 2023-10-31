@@ -3,9 +3,9 @@ package com.example.movieviewer.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.movieviewer.repositories.LoginRepository
+import com.example.movieviewer.repositories.UserRepository
 
-class LoginTestViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginTestViewModel(private val loginRepository: UserRepository) : ViewModel() {
 
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult

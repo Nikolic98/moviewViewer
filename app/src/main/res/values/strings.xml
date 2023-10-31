@@ -18,4 +18,5 @@
     <string name="title_search">Search</string>
     <string name="title_watchlist">Watchlist</string>
     <string name="title_profile">Profile</string>
+    <string name="movie_details">Movie details</string>
 </resources>

@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movieviewer.models.User
-import com.example.movieviewer.repositories.LoginRepository
-import com.example.movieviewer.viewModels.results.SuccessResultState
+import com.example.movieviewer.repositories.UserRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -14,7 +12,7 @@ import javax.inject.Inject
  * @author Marko Nikolic on 18.8.23.
  */
 class ProfileViewModel @Inject constructor(
-        private val loginRepository: LoginRepository) : ViewModel() {
+        private val loginRepository: UserRepository) : ViewModel() {
     val successResult by lazy { MutableLiveData<Unit>() }
 
     private val _text = MutableLiveData<String>()

@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.movieviewer.MovieViewerApplication
+import com.example.movieviewer.R
 import com.example.movieviewer.databinding.ActivityMovieDetailsBinding
 import com.example.movieviewer.longToast
 import com.example.movieviewer.viewModels.MovieDetailsViewModel
@@ -42,8 +43,11 @@ class MovieDetailsActivity : BoundBaseActivity() {
                 viewModelFactory)[MovieDetailsActivity::class.java.name, MovieDetailsViewModel::class.java]
         setContentView(binding.root)
 
-        binding.toolbar.setNavigationOnClickListener {
-            finish()
+        binding.toolbar.apply {
+            title = getString(R.string.movie_details)
+            setNavigationOnClickListener {
+                finish()
+            }
         }
 
         binding.watchlistBtn.setOnClickListener {

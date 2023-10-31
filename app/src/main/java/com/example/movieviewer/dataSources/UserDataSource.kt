@@ -16,7 +16,7 @@ import kotlin.coroutines.suspendCoroutine
 /**
  * @author Marko Nikolic on 24.8.23.
  */
-class LoginDataSource {
+class UserDataSource {
 
     private var auth: FirebaseAuth = Firebase.auth
     private val db = Firebase.firestore
