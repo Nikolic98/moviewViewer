@@ -1,5 +1,6 @@
 package com.example.movieviewer.repositories
 
+import android.content.Context
 import com.example.movieviewer.dataSources.UserDataSource
 import com.example.movieviewer.models.LoggedInUser
 import com.example.movieviewer.viewModels.results.ResultState
@@ -40,6 +41,11 @@ class UserRepository(private val dataSource: UserDataSource) {
         }
         return result
     }
+
+    suspend fun addOrRemoveFromWatchlist(context: Context,
+            id: String) = dataSource.addOrRemoveFromWatchlist(context, id)
+
+    suspend fun doesWatchlistContainMovie(id: String) = dataSource.doesWatchlistContainMovie(id)
 
     // todo maybe remove this ?
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {

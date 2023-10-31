@@ -51,8 +51,7 @@ class MovieDetailsActivity : BoundBaseActivity() {
         }
 
         binding.watchlistBtn.setOnClickListener {
-            // todo add to users watchList
-            longToast(viewModel.addToWatchList().toString())
+            viewModel.addOrRemoveFromWatchlist(this).toString()
         }
 
         initObservers()
@@ -73,6 +72,13 @@ class MovieDetailsActivity : BoundBaseActivity() {
             }
             errorResult.observe(this@MovieDetailsActivity) {
                 longToast(it)
+            }
+            addToWatchListResult.observe(this@MovieDetailsActivity) {
+                longToast(it)
+            }
+            doesWatchlistContainMovieResult.observe(this@MovieDetailsActivity) { doesContain ->
+                val drawable = if (doesContain) getDrawable(R.drawable.ic_added) else getDrawable(R.drawable.ic_add)
+                binding.watchlistBtn.background = drawable
             }
         }
     }

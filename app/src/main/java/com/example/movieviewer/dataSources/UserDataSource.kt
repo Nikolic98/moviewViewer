@@ -1,5 +1,7 @@
 package com.example.movieviewer.dataSources
 
+import android.content.Context
+import com.example.movieviewer.R
 import com.example.movieviewer.content.AppErrorObject
 import com.example.movieviewer.models.LoggedInUser
 import com.example.movieviewer.models.User
@@ -7,6 +9,7 @@ import com.example.movieviewer.viewModels.results.ResultState
 import com.example.movieviewer.viewModels.results.SuccessResultState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlin.coroutines.resume
@@ -24,6 +27,7 @@ class UserDataSource {
     companion object {
         private const val USERS = "/users"
         private const val USER_ID = "userId"
+        private const val WATCHLIST = "watchList"
     }
 
     suspend fun loginUser(username: String, password: String): ResultState {
@@ -85,6 +89,62 @@ class UserDataSource {
                 }
                 .addOnFailureListener {
                     continuation.resume(Result.failure(it))
+                }
+        }
+    }
+
+    suspend fun addOrRemoveFromWatchlist(context: Context, id: String): ResultState {
+        return suspendCoroutine { continuation ->
+            val currentUser = auth.currentUser
+            db.collection(USERS)
+                .whereEqualTo(USER_ID, currentUser!!.uid)
+                .get()
+                .addOnSuccessListener {
+                    it.documents[0].let { documentSnapshot ->
+                        val user = documentSnapshot.toObject(User::class.java)
+                        val addOrRemoveMessage: String
+                        val addOrRemove = if (user?.watchList?.contains(id) == true) {
+                            addOrRemoveMessage = context.getString(R.string.removed_from_watchlist)
+                            FieldValue.arrayRemove(id)
+                        } else {
+                            addOrRemoveMessage = context.getString(R.string.added_to_watchlist)
+                            FieldValue.arrayUnion(id)
+                        }
+                        db.collection(USERS)
+                            .document(documentSnapshot.id)
+                            .update(WATCHLIST, addOrRemove)
+                            .addOnSuccessListener {
+                                continuation.resume(SuccessResultState(addOrRemoveMessage))
+                            }
+                            .addOnFailureListener {
+                                continuation.resumeWithException(
+                                        AppErrorObject(it.message!!).joinForThrowable())
+                            }
+                    }
+                }
+                .addOnFailureListener {
+                    continuation.resumeWithException(
+                            AppErrorObject(it.message!!).joinForThrowable())
+                }
+        }
+    }
+
+    suspend fun doesWatchlistContainMovie(id: String): ResultState {
+        return suspendCoroutine { continuation ->
+            val currentUser = auth.currentUser
+            db.collection(USERS)
+                .whereEqualTo(USER_ID, currentUser!!.uid)
+                .get()
+                .addOnSuccessListener {
+                    it.documents[0].let { documentSnapshot ->
+                        val user = documentSnapshot.toObject(User::class.java)
+                        val doesContain = user?.watchList?.contains(id) == true
+                        continuation.resume(SuccessResultState(doesContain))
+                    }
+                }
+                .addOnFailureListener {
+                    continuation.resumeWithException(
+                            AppErrorObject(it.message!!).joinForThrowable())
                 }
         }
     }
