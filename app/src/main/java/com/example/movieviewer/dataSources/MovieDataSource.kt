@@ -1,6 +1,7 @@
 package com.example.movieviewer.dataSources
 
 import com.example.movieviewer.models.Movie
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlin.coroutines.resume
@@ -40,22 +41,20 @@ class MovieDataSource {
                 continuation.resume(Result.success(movies))
                 return@suspendCoroutine
             }
-            movieIds.forEach { movieId ->
-                db.collection(MOVIES)
-                    .document(movieId)
-                    .get()
-                    .addOnSuccessListener {
-                        it.toObject(Movie::class.java)?.let { movie ->
+            db.collection(MOVIES)
+                .whereIn(FieldPath.documentId(), movieIds)
+                .get()
+                .addOnSuccessListener {
+                    it.documents.forEach { documentSnapshot ->
+                        documentSnapshot.toObject(Movie::class.java)?.let { movie ->
                             movies.add(movie)
                         }
                     }
-                    .addOnFailureListener {
-                        continuation.resume(Result.failure(it))
-                    }
-                    .addOnCompleteListener {
-                        continuation.resume(Result.success(movies))
-                    }
-            }
+                    continuation.resume(Result.success(movies))
+                }
+                .addOnFailureListener {
+                    continuation.resume(Result.failure(it))
+                }
         }
     }
 

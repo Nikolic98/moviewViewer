@@ -9,6 +9,7 @@ import com.example.movieviewer.viewModels.results.ResultState
 import com.example.movieviewer.viewModels.results.SuccessResultState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -157,7 +158,7 @@ class UserDataSource {
                 .whereEqualTo(USER_ID, currentUser!!.uid)
                 .get()
                 .addOnSuccessListener {
-                    it.documents[0].let { documentSnapshot ->
+                    it.documents.forEach { documentSnapshot ->
                         val user = documentSnapshot.toObject(User::class.java)
                         continuation.resume(
                                 Result.success(user?.watchList) as Result<ArrayList<String>>)

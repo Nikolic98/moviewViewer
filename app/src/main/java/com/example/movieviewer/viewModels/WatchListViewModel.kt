@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.movieviewer.models.Movie
 import com.example.movieviewer.repositories.MovieRepository
 import com.example.movieviewer.repositories.UserRepository
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,20 +28,17 @@ class WatchListViewModel @Inject constructor(
     fun getMovies() {
         isRefreshingResult.value = true
         viewModelScope.launch {
-            val movieIdsResult = userRepository.getIdsFromWatchList()
-            movieIdsResult.onSuccess { movieIds ->
-                val result = movieRepository.getMovies(movieIds)
-                result.onSuccess {
+            val moviesIds = async { userRepository.getIdsFromWatchList() }.await()
+            moviesIds.onSuccess { ids ->
+                movieRepository.getMovies(ids).onSuccess {
                     _movieData.postValue(it)
-                    delay(200)
                     isRefreshingResult.postValue(false)
-                }
-                result.onFailure {
+                }.onFailure {
                     errorResult.postValue(it.message)
                     isRefreshingResult.postValue(false)
                 }
             }
-            movieIdsResult.onFailure {
+            moviesIds.onFailure {
                 errorResult.postValue(it.message)
                 isRefreshingResult.postValue(false)
             }
