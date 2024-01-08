@@ -22,8 +22,10 @@ class WatchListViewModel @Inject constructor(
     private val _movieData = MutableLiveData<ArrayList<Movie>>()
     val movieData: LiveData<ArrayList<Movie>> = _movieData
     val errorResult by lazy { MutableLiveData<String>() }
+    val isRefreshingResult by lazy { MutableLiveData<Boolean>() }
 
     fun getMovies() {
+        isRefreshingResult.value = true
         viewModelScope.launch {
             val movieIdsResult = userRepository.getIdsFromWatchList()
             movieIdsResult.onSuccess { movieIds ->
@@ -31,13 +33,16 @@ class WatchListViewModel @Inject constructor(
                 result.onSuccess {
                     _movieData.postValue(it)
                     delay(200)
+                    isRefreshingResult.postValue(false)
                 }
                 result.onFailure {
                     errorResult.postValue(it.message)
+                    isRefreshingResult.postValue(false)
                 }
             }
             movieIdsResult.onFailure {
                 errorResult.postValue(it.message)
+                isRefreshingResult.postValue(false)
             }
         }
     }

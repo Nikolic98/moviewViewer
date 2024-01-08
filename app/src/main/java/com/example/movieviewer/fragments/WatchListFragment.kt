@@ -32,7 +32,7 @@ class WatchListFragment : BoundBaseFragment() {
     val movieDetailsLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         if (result.resultCode == RESULT_OK) {
-            viewModel.getMovies()
+            getMovies()
         }
     }
 
@@ -45,9 +45,16 @@ class WatchListFragment : BoundBaseFragment() {
         _binding = FragmentWatchlistBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this,
                 viewModelFactory)[WatchListViewModel::class.java.name, WatchListViewModel::class.java]
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            getMovies()
+        }
         initObservers()
-        viewModel.getMovies()
+        getMovies()
         return binding.root
+    }
+
+    private fun getMovies() {
+        viewModel.getMovies()
     }
 
     private fun initObservers() {
@@ -71,6 +78,10 @@ class WatchListFragment : BoundBaseFragment() {
 
             errorResult.observe(viewLifecycleOwner) {
                 requireActivity().longToast(it)
+            }
+
+            isRefreshingResult.observe(viewLifecycleOwner) {
+                binding.swipeRefreshLayout.isRefreshing = it
             }
         }
     }
