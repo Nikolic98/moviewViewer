@@ -58,4 +58,23 @@ class MovieDataSource {
             }
         }
     }
+
+    suspend fun getAllMovies(): Result<ArrayList<Movie>> {
+        return suspendCoroutine { continuation ->
+            db.collection(MOVIES)
+                .get()
+                .addOnSuccessListener {
+                    val movies = arrayListOf<Movie>()
+                    it.documents.forEach { documentSnapshot ->
+                        documentSnapshot.toObject(Movie::class.java)?.let { movie ->
+                            movies.add(movie)
+                        }
+                    }
+                    continuation.resume(Result.success(movies))
+                }
+                .addOnFailureListener {
+                    continuation.resume(Result.failure(it))
+                }
+        }
+    }
 }

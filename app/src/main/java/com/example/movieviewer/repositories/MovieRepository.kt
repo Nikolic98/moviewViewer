@@ -10,4 +10,6 @@ class MovieRepository(private val dataSource: MovieDataSource) {
     suspend fun getMovie(movieId: String) = dataSource.getMovie(movieId)
 
     suspend fun getMovies(movieIds: List<String>) = dataSource.getMovies(movieIds)
+
+    suspend fun getAllMovies() = dataSource.getAllMovies()
 }

@@ -1,21 +1,22 @@
 package com.example.movieviewer.viewModels
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.recyclerview.widget.RecyclerView
 import com.example.movieviewer.models.Banner
 import com.example.movieviewer.models.Movie
 import com.example.movieviewer.repositories.HomeRepository
+import com.example.movieviewer.repositories.MovieRepository
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
  * @author Marko Nikolic on 18.8.23.
  */
-class HomeViewModel @Inject constructor(private val homeRepository: HomeRepository) : ViewModel() {
+class HomeViewModel @Inject constructor(private val homeRepository: HomeRepository,
+        private val movieRepository: MovieRepository) : ViewModel() {
 
     private val _movieList = MutableLiveData<ArrayList<Movie>>()
     val movieList: LiveData<ArrayList<Movie>> = _movieList
@@ -23,28 +24,25 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
     private val _banner = MutableLiveData<ArrayList<Banner>>()
     val banner: LiveData<ArrayList<Banner>> = _banner
 
-    val successResult by lazy { MutableLiveData<Unit>() }
     val errorResult by lazy { MutableLiveData<String>() }
+    val isRefreshingResult by lazy { MutableLiveData<Boolean>() }
 
-    fun getBanner() {
+    fun getData() {
+        isRefreshingResult.value = true
         viewModelScope.launch {
-            val result = homeRepository.getBanner()
-            result.onSuccess {
+            val banner = async { homeRepository.getBanner() }
+            val movies = async { movieRepository.getAllMovies() }
+            banner.await().onSuccess {
                 _banner.postValue(it)
-            }
-            result.onFailure {
+            }.onFailure {
+                isRefreshingResult.postValue(false)
                 errorResult.postValue(it.message)
             }
-        }
-    }
-
-    fun getMovies() {
-        viewModelScope.launch {
-            val result = homeRepository.getMovies()
-            result.onSuccess {
+            movies.await().onSuccess {
+                isRefreshingResult.postValue(false)
                 _movieList.postValue(it)
-            }
-            result.onFailure {
+            }.onFailure {
+                isRefreshingResult.postValue(false)
                 errorResult.postValue(it.message)
             }
         }

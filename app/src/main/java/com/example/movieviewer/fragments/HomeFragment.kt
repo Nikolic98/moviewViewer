@@ -37,17 +37,20 @@ class HomeFragment : BoundBaseFragment() {
         viewModel = ViewModelProvider(this,
                 viewModelFactory)[HomeViewModel::class.java.name, HomeViewModel::class.java]
 
-        initObservers()
-        viewModel.apply {
-            getBanner()
-            getMovies()
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            initialRequest()
         }
+        initObservers()
+        initialRequest()
         return binding.root
+    }
+
+    private fun initialRequest() {
+        viewModel.getData()
     }
 
     private fun initObservers() {
         viewModel.apply {
-            
             // refactor from recyclerView to ViewPager
             banner.observe(viewLifecycleOwner) {
                 binding.recyclerViewBanner.adapter = BannerAdapter(it,
@@ -65,9 +68,11 @@ class HomeFragment : BoundBaseFragment() {
                             }
                         })
             }
-
             errorResult.observe(viewLifecycleOwner) {
                 activity?.longToast(it)
+            }
+            isRefreshingResult.observe(viewLifecycleOwner) {
+                binding.swipeRefreshLayout.isRefreshing = it
             }
         }
     }

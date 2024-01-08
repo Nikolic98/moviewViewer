@@ -8,6 +8,4 @@ import com.example.movieviewer.dataSources.HomeDataSource
 class HomeRepository(private val dataSource: HomeDataSource) {
 
     suspend fun getBanner() = dataSource.getBanner()
-
-    suspend fun getMovies() = dataSource.getMovies()
 }
