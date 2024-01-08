@@ -30,5 +30,5 @@
         android:layout_gravity="center"
         android:layout_marginHorizontal="10dp"
         android:textSize="18sp"
-        tools:text="Movie name sadasdasd asdasd"/>
+        tools:text="Movie name will be placed here"/>
 </LinearLayout>
