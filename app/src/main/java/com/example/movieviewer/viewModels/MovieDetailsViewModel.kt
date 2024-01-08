@@ -9,7 +9,6 @@ import com.example.movieviewer.models.Movie
 import com.example.movieviewer.repositories.MovieRepository
 import com.example.movieviewer.repositories.UserRepository
 import com.example.movieviewer.viewModels.results.SuccessResultState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,12 +26,14 @@ class MovieDetailsViewModel @Inject constructor(
     val doesWatchlistContainMovieResult by lazy { MutableLiveData<Boolean>() }
     val errorResult by lazy { MutableLiveData<String>() }
 
+    private lateinit var movieId: String
+
     fun getMovie(movieId: String) {
         viewModelScope.launch {
             val result = movieRepository.getMovie(movieId)
             result.onSuccess {
                 _movieData.postValue(it)
-                delay(200)
+                this@MovieDetailsViewModel.movieId = it.id
                 doesWatchlistContainMovie()
             }
             result.onFailure {
@@ -57,13 +58,15 @@ class MovieDetailsViewModel @Inject constructor(
 
     private fun doesWatchlistContainMovie() {
         viewModelScope.launch {
-            try {
-                val result = userRepository.doesWatchlistContainMovie(movieData.value!!.id)
-                if (result is SuccessResultState<*>) {
-                    doesWatchlistContainMovieResult.postValue(result.result as Boolean)
-                }
-            } catch (t: Throwable) {
-                errorResult.postValue(t.localizedMessage)
+            if (!::movieId.isInitialized) {
+                return@launch
+            }
+            val result = userRepository.doesWatchlistContainMovie(movieId)
+            result.onSuccess {
+                doesWatchlistContainMovieResult.postValue(it)
+            }
+            result.onFailure {
+                errorResult.postValue(it.localizedMessage)
             }
         }
     }

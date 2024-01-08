@@ -130,7 +130,7 @@ class UserDataSource {
         }
     }
 
-    suspend fun doesWatchlistContainMovie(id: String): ResultState {
+    suspend fun doesWatchlistContainMovie(id: String): Result<Boolean> {
         return suspendCoroutine { continuation ->
             val currentUser = auth.currentUser
             db.collection(USERS)
@@ -140,12 +140,12 @@ class UserDataSource {
                     it.documents[0].let { documentSnapshot ->
                         val user = documentSnapshot.toObject(User::class.java)
                         val doesContain = user?.watchList?.contains(id) == true
-                        continuation.resume(SuccessResultState(doesContain))
+                        continuation.resume(Result.success(doesContain))
                     }
                 }
                 .addOnFailureListener {
-                    continuation.resumeWithException(
-                            AppErrorObject(it.message!!).joinForThrowable())
+                    continuation.resume(
+                            Result.failure(AppErrorObject(it.message!!).joinForThrowable()))
                 }
         }
     }
