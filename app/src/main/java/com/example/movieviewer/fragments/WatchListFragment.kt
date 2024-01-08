@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.movieviewer.MovieViewerApplication
 import com.example.movieviewer.activities.MovieDetailsActivity
 import com.example.movieviewer.adapters.MovieCardAdapter
+import com.example.movieviewer.adapters.WatchlistCardAdapter
 import com.example.movieviewer.databinding.FragmentWatchlistBinding
 import com.example.movieviewer.interfaces.ItemClickListener
 import com.example.movieviewer.longToast
@@ -66,7 +67,7 @@ class WatchListFragment : BoundBaseFragment() {
                 } else {
                     binding.emptyView.visibility = View.GONE
                     binding.recyclerView.visibility = View.VISIBLE
-                    binding.recyclerView.adapter = MovieCardAdapter(it,
+                    binding.recyclerView.adapter = WatchlistCardAdapter(it,
                             object : ItemClickListener {
                                 override fun onItemClick(id: String) {
                                     movieDetailsLauncher.launch(
