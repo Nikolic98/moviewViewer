@@ -8,7 +8,6 @@ import com.example.movieviewer.models.Movie
 import com.example.movieviewer.repositories.MovieRepository
 import com.example.movieviewer.repositories.UserRepository
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
