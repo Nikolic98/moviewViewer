@@ -1,5 +1,7 @@
 package com.example.movieviewer.models
 
+import kotlin.collections.ArrayList
+
 /**
  * @author Marko Nikolic on 25.8.23.
  */

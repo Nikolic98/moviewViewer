@@ -32,4 +32,30 @@ class MovieDataSource {
                 }
         }
     }
+
+    suspend fun getMovies(movieIds: List<String>): Result<ArrayList<Movie>> {
+        return suspendCoroutine { continuation ->
+            val movies = arrayListOf<Movie>()
+            if (movieIds.isEmpty()) {
+                continuation.resume(Result.success(movies))
+                return@suspendCoroutine
+            }
+            movieIds.forEach { movieId ->
+                db.collection(MOVIES)
+                    .document(movieId)
+                    .get()
+                    .addOnSuccessListener {
+                        it.toObject(Movie::class.java)?.let { movie ->
+                            movies.add(movie)
+                        }
+                    }
+                    .addOnFailureListener {
+                        continuation.resume(Result.failure(it))
+                    }
+                    .addOnCompleteListener {
+                        continuation.resume(Result.success(movies))
+                    }
+            }
+        }
+    }
 }

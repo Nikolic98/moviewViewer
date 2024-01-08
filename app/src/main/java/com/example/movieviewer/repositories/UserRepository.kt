@@ -47,6 +47,8 @@ class UserRepository(private val dataSource: UserDataSource) {
 
     suspend fun doesWatchlistContainMovie(id: String) = dataSource.doesWatchlistContainMovie(id)
 
+    suspend fun getIdsFromWatchList() = dataSource.getIdsFromWatchList()
+
     // todo maybe remove this ?
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {
         this.currentUser = loggedInUser

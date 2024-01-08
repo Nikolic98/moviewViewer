@@ -51,6 +51,7 @@ class MovieDetailsActivity : BoundBaseActivity() {
         }
 
         binding.watchlistBtn.setOnClickListener {
+            setResult(RESULT_OK)
             viewModel.addOrRemoveFromWatchlist(this).toString()
         }
 

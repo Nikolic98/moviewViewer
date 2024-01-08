@@ -12,6 +12,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlin.collections.ArrayList
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -145,6 +146,26 @@ class UserDataSource {
                 .addOnFailureListener {
                     continuation.resumeWithException(
                             AppErrorObject(it.message!!).joinForThrowable())
+                }
+        }
+    }
+
+    suspend fun getIdsFromWatchList(): Result<ArrayList<String>> {
+        return suspendCoroutine { continuation ->
+            val currentUser = auth.currentUser
+            db.collection(USERS)
+                .whereEqualTo(USER_ID, currentUser!!.uid)
+                .get()
+                .addOnSuccessListener {
+                    it.documents[0].let { documentSnapshot ->
+                        val user = documentSnapshot.toObject(User::class.java)
+                        continuation.resume(
+                                Result.success(user?.watchList) as Result<ArrayList<String>>)
+                    }
+                }
+                .addOnFailureListener {
+                    continuation.resume(
+                            Result.failure(AppErrorObject(it.message!!).joinForThrowable()))
                 }
         }
     }
