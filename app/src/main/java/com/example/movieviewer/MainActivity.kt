@@ -13,7 +13,6 @@ import com.example.movieviewer.viewModels.MainViewModel
 import com.example.movieviewer.viewModels.ViewModelFactory
 import javax.inject.Inject
 
-
 class MainActivity : BoundBaseActivity() {
 
     @Inject
@@ -36,46 +35,41 @@ class MainActivity : BoundBaseActivity() {
 
         initObservers()
 
+        val homeFragment = HomeFragment()
+        val searchFragment = SearchFragment()
+        val watchListFragment = WatchListFragment()
+        val profileFragment = ProfileFragment()
+
         // initialPage
-        setFragment(HomeFragment())
+        setFragment(homeFragment)
 
         binding.navView.setOnItemSelectedListener {
-            // By using switch we can easily get
-            // the selected fragment
-            // by using there id.
-            // By using switch we can easily get
-            // the selected fragment
-            // by using there id.
-            var selectedFragment: Fragment? = null
             when (it.itemId) {
-                R.id.navigation_home -> {
-                    selectedFragment = HomeFragment()
-                }
-
-                R.id.navigation_search -> {
-                    selectedFragment = SearchFragment()
-                }
-
-                R.id.navigation_watchlist -> {
-                    selectedFragment = WatchListFragment()
-                }
-
-                R.id.navigation_profile -> {
-                    selectedFragment = ProfileFragment()
-                }
-            }
-            if (selectedFragment != null) {
-                setFragment(selectedFragment)
+                R.id.navigation_home -> setFragment(homeFragment)
+                R.id.navigation_search -> setFragment(searchFragment)
+                R.id.navigation_watchlist -> setFragment(watchListFragment)
+                R.id.navigation_profile -> setFragment(profileFragment)
             }
             true
         }
-
         setContentView(binding.root)
     }
 
     private fun setFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().replace(binding.container.id,
-                fragment).commit()
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+
+        // Hide all other fragments
+        for (existingFragment in supportFragmentManager.fragments) {
+            fragmentTransaction.hide(existingFragment)
+        }
+
+        // Check if the fragment is added, if not, add it
+        if (!fragment.isAdded) {
+            fragmentTransaction.add(binding.container.id, fragment)
+        }
+
+        // Show the selected fragment
+        fragmentTransaction.show(fragment).commit()
     }
 
     private fun initObservers() {
