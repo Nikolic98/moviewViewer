@@ -33,8 +33,6 @@ class MainActivity : BoundBaseActivity() {
         viewModel = ViewModelProvider(this,
                 viewModelFactory)[MainActivity::class.java.name, MainViewModel::class.java]
 
-        initObservers()
-
         val homeFragment = HomeFragment()
         val searchFragment = SearchFragment()
         val watchListFragment = WatchListFragment()
@@ -70,8 +68,5 @@ class MainActivity : BoundBaseActivity() {
 
         // Show the selected fragment
         fragmentTransaction.show(fragment).commit()
-    }
-
-    private fun initObservers() {
     }
 }
