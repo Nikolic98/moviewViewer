@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieviewer.MovieViewerApplication
+import com.example.movieviewer.R
 import com.example.movieviewer.activities.login.LoginActivity
 import com.example.movieviewer.databinding.FragmentProfileBinding
 import com.example.movieviewer.longToast
 import com.example.movieviewer.viewModels.ProfileViewModel
 import com.example.movieviewer.viewModels.ViewModelFactory
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import javax.inject.Inject
 
 /**
@@ -42,7 +44,16 @@ class ProfileFragment : BoundBaseFragment() {
             viewModel.logoutUser()
         }
         binding.deleteBtn.setOnClickListener {
-            viewModel.deleteUser()
+            MaterialAlertDialogBuilder(requireActivity())
+                .setTitle(R.string.delete_account)
+                .setMessage(R.string.delete_account_message)
+                .setPositiveButton(R.string.yes) { _, _ ->
+                    viewModel.deleteUser()
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
         }
         return binding.root
     }

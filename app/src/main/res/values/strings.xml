@@ -29,4 +29,7 @@
     <string name="registered_email">Registered email:</string>
     <string name="account_name">Account name:</string>
     <string name="delete_account">Delete account</string>
+    <string name="delete_account_message">Are you sure you want to delete your account?</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
 </resources>
