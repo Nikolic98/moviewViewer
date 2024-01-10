@@ -45,11 +45,11 @@ class LoginActivity : BoundBaseActivity() {
             registerBtn.setOnClickListener {
                 startActivity(Intent(this@LoginActivity, CreateAccountActivity::class.java))
             }
+            Glide.with(root)
+                .load(R.mipmap.ic_launcher)
+                .circleCrop()
+                .into(image)
         }
-        Glide.with(binding.root)
-            .load(R.mipmap.ic_launcher)
-            .circleCrop()
-            .into(binding.image)
     }
 
     private fun initObservers() {
@@ -61,7 +61,6 @@ class LoginActivity : BoundBaseActivity() {
             errorResult.observe(this@LoginActivity) {
                 longToast(it)
             }
-
             loginFormState.observe(this@LoginActivity) {
                 if (it.usernameError != null) {
                     binding.usernameInput.error = getString(it.usernameError)

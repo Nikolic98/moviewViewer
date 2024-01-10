@@ -3,8 +3,10 @@ package com.example.movieviewer.activities.login
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.movieviewer.MainActivity
 import com.example.movieviewer.MovieViewerApplication
+import com.example.movieviewer.R
 import com.example.movieviewer.activities.BoundBaseActivity
 import com.example.movieviewer.databinding.ActivityCreateAccountBinding
 import com.example.movieviewer.longToast
@@ -31,17 +33,24 @@ class CreateAccountActivity : BoundBaseActivity() {
         viewModel = ViewModelProvider(this,
                 viewModelFactory)[CreateAccountActivity::class.java.name, CreateAccountViewModel::class.java]
         setContentView(binding.root)
-
-        binding.toolbar.setNavigationOnClickListener {
-            finish()
-        }
         initObservers()
-        binding.registerButton.setOnClickListener {
-            viewModel.createUser(
-                    binding.name.text.trim().toString(),
-                    binding.username.text.trim().toString(),
-                    binding.password.text.trim().toString(),
-            )
+
+        binding.apply {
+            toolbar.setNavigationOnClickListener {
+                finish()
+            }
+            registerButton.setOnClickListener {
+                viewModel.createUser(
+                        nameInput.text?.trim().toString(),
+                        usernameInput.text?.trim().toString(),
+                        passwordInput.text?.trim().toString(),
+                )
+            }
+
+            Glide.with(root)
+                .load(R.mipmap.ic_launcher)
+                .circleCrop()
+                .into(image)
         }
     }
 
