@@ -24,6 +24,9 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
     private val _banner = MutableLiveData<ArrayList<Banner>>()
     val banner: LiveData<ArrayList<Banner>> = _banner
 
+    private val _searchMovieList = MutableLiveData<ArrayList<Movie>>()
+    val searchMovieList: LiveData<ArrayList<Movie>> = _searchMovieList
+
     val errorResult by lazy { MutableLiveData<String>() }
     val isRefreshingResult by lazy { MutableLiveData<Boolean>() }
 
@@ -44,6 +47,16 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
             }.onFailure {
                 isRefreshingResult.postValue(false)
                 errorResult.postValue(it.message)
+            }
+        }
+    }
+
+    fun searchMovie(name: String) {
+        viewModelScope.launch {
+            movieRepository.getMoviesByName(name).onSuccess {
+                _searchMovieList.postValue(it)
+            }.onFailure {
+                errorResult.postValue(it.localizedMessage)
             }
         }
     }

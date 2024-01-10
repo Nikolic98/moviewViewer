@@ -7,7 +7,6 @@ import com.example.movieviewer.activities.BoundBaseActivity
 import com.example.movieviewer.databinding.ActivityMainBinding
 import com.example.movieviewer.fragments.HomeFragment
 import com.example.movieviewer.fragments.ProfileFragment
-import com.example.movieviewer.fragments.SearchFragment
 import com.example.movieviewer.fragments.WatchListFragment
 import com.example.movieviewer.viewModels.MainViewModel
 import com.example.movieviewer.viewModels.ViewModelFactory
@@ -34,7 +33,6 @@ class MainActivity : BoundBaseActivity() {
                 viewModelFactory)[MainActivity::class.java.name, MainViewModel::class.java]
 
         val homeFragment = HomeFragment()
-        val searchFragment = SearchFragment()
         val watchListFragment = WatchListFragment()
         val profileFragment = ProfileFragment()
 
@@ -44,7 +42,6 @@ class MainActivity : BoundBaseActivity() {
         binding.navView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_home -> setFragment(homeFragment)
-                R.id.navigation_search -> setFragment(searchFragment)
                 R.id.navigation_watchlist -> setFragment(watchListFragment)
                 R.id.navigation_profile -> setFragment(profileFragment)
             }

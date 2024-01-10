@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieviewer.MovieViewerApplication
 import com.example.movieviewer.activities.MovieDetailsActivity
 import com.example.movieviewer.adapters.BannerAdapter
+import com.example.movieviewer.adapters.ItemWithNameCardAdapter
 import com.example.movieviewer.adapters.MovieCardAdapter
 import com.example.movieviewer.databinding.FragmentHomeBinding
 import com.example.movieviewer.interfaces.ItemClickListener
@@ -40,6 +42,14 @@ class HomeFragment : BoundBaseFragment() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             initialRequest()
         }
+
+        binding.searchView.apply {
+            setupWithSearchBar(binding.searchBar)
+            editText.addTextChangedListener {
+                viewModel.searchMovie(it.toString().trim())
+            }
+        }
+
         initObservers()
         initialRequest()
         return binding.root
@@ -62,6 +72,14 @@ class HomeFragment : BoundBaseFragment() {
             }
             movieList.observe(viewLifecycleOwner) {
                 binding.recyclerView.adapter = MovieCardAdapter(it,
+                        object : ItemClickListener {
+                            override fun onItemClick(id: String) {
+                                startDetails(id)
+                            }
+                        })
+            }
+            searchMovieList.observe(viewLifecycleOwner) {
+                binding.recyclerViewSearch.adapter = ItemWithNameCardAdapter(it,
                         object : ItemClickListener {
                             override fun onItemClick(id: String) {
                                 startDetails(id)

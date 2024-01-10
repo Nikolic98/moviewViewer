@@ -8,15 +8,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <com.google.android.material.search.SearchBar
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:hint="@string/search_title"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.search.SearchView
+            android:id="@+id/search_view"
+            android:hint="@string/search_message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_with_name_card_layout"/>
+        </com.google.android.material.search.SearchView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_banner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/search_bar"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/banner_layout"/>
@@ -25,8 +47,9 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/recycler_view_banner"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/card_layout"/>
-    </LinearLayout>
+    </RelativeLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

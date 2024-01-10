@@ -7,7 +7,6 @@ import com.example.movieviewer.viewModels.LoginViewModel
 import com.example.movieviewer.viewModels.MainViewModel
 import com.example.movieviewer.viewModels.MovieDetailsViewModel
 import com.example.movieviewer.viewModels.ProfileViewModel
-import com.example.movieviewer.viewModels.SearchViewModel
 import com.example.movieviewer.viewModels.ViewModelKey
 import com.example.movieviewer.viewModels.WatchListViewModel
 import dagger.Binds
@@ -39,11 +38,6 @@ abstract class ViewModelModules {
     @IntoMap
     @ViewModelKey(HomeViewModel::class)
     abstract fun provideHomeViewModel(viewModel: HomeViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SearchViewModel::class)
-    abstract fun provideSearchViewModel(viewModel: SearchViewModel): ViewModel
 
     @Binds
     @IntoMap

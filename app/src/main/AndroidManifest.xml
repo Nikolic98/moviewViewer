@@ -32,7 +32,8 @@
             android:label="@string/title_activity_login"/>
         <activity
             android:name=".MainActivity"
-            android:exported="false"/>
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".activities.login.CreateAccountActivity"
             android:exported="false"/>
