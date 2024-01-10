@@ -26,6 +26,7 @@
     <string name="search_message">Type a movie name</string>
     <string name="sign_out">Sign out</string>
     <string name="my_account">My account</string>
-    <string name="registered_email">Registered email: </string>
+    <string name="registered_email">Registered email:</string>
+    <string name="account_name">Account name:</string>
     <string name="delete_account">Delete account</string>
 </resources>

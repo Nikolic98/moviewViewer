@@ -21,7 +21,6 @@ class StartupActivity : AppCompatActivity() {
         binding = ActivityStartupBinding.inflate(layoutInflater)
         auth = Firebase.auth
 
-
         setContentView(binding.root)
     }
 

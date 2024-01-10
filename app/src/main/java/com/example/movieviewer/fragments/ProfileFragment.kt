@@ -49,8 +49,9 @@ class ProfileFragment : BoundBaseFragment() {
 
     private fun initObservers() {
         viewModel.apply {
-            userEmail.observe(viewLifecycleOwner) {
-                binding.emailText.text = it
+            userData.observe(viewLifecycleOwner) {
+                binding.nameText.text = it.name
+                binding.emailText.text = it.email
             }
             logoutActionResult.observe(viewLifecycleOwner) {
                 startActivity(Intent(activity, LoginActivity::class.java))

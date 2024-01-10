@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieviewer.R
 import com.example.movieviewer.repositories.UserRepository
+import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,8 +17,8 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
         private val userRepository: UserRepository) : ViewModel() {
 
-    private val _userEmail = MutableLiveData<String>()
-    val userEmail: LiveData<String> = _userEmail
+    private val _userData = MutableLiveData<UserData>()
+    val userData: LiveData<UserData> = _userData
 
     val logoutActionResult by lazy { MutableLiveData<Unit>() }
     val errorResult by lazy { MutableLiveData<String>() }
@@ -27,7 +28,9 @@ class ProfileViewModel @Inject constructor(
         isRefreshingResult.value = true
         viewModelScope.launch {
             userRepository.getCurrentUser().onSuccess {
-                _userEmail.postValue("${context.getString(R.string.registered_email)} ${it.email}")
+                _userData.postValue(
+                        UserData("${context.getString(R.string.account_name)} ${it.displayName}",
+                                "${context.getString(R.string.registered_email)} ${it.email}"))
                 isRefreshingResult.postValue(false)
             }.onFailure {
                 errorResult.postValue(it.localizedMessage)
@@ -54,3 +57,5 @@ class ProfileViewModel @Inject constructor(
         }
     }
 }
+
+ data class UserData(val name: String, val email: String)
