@@ -3,8 +3,10 @@ package com.example.movieviewer.activities.login
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.movieviewer.MainActivity
 import com.example.movieviewer.MovieViewerApplication
+import com.example.movieviewer.R
 import com.example.movieviewer.activities.BoundBaseActivity
 import com.example.movieviewer.databinding.ActivityLoginBinding
 import com.example.movieviewer.longToast
@@ -44,6 +46,10 @@ class LoginActivity : BoundBaseActivity() {
                 startActivity(Intent(this@LoginActivity, CreateAccountActivity::class.java))
             }
         }
+        Glide.with(binding.root)
+            .load(R.mipmap.ic_launcher)
+            .circleCrop()
+            .into(binding.image)
     }
 
     private fun initObservers() {
