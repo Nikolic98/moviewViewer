@@ -21,16 +21,25 @@ class LoginViewModel @Inject constructor(
 
     val successResult by lazy { MutableLiveData<Unit>() }
     val errorResult by lazy { MutableLiveData<String>() }
+    val isRefreshingResult by lazy { MutableLiveData<Boolean>() }
 
     fun loginUser(username: String, password: String) {
+        isRefreshingResult.value = true
         usernameAndPasswordValidation(username, password)
         if (loginFormState.value?.isDataValid == false) {
+            isRefreshingResult.value = false
             return
         }
         viewModelScope.launch {
             loginRepository.loginUser(username, password)
-                .onSuccess { successResult.postValue(Unit) }
-                .onFailure { errorResult.postValue(it.localizedMessage) }
+                .onSuccess {
+                    successResult.postValue(Unit)
+                    isRefreshingResult.postValue(false)
+                }
+                .onFailure {
+                    errorResult.postValue(it.localizedMessage)
+                    isRefreshingResult.postValue(false)
+                }
         }
     }
 

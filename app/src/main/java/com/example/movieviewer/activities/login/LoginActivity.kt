@@ -36,6 +36,7 @@ class LoginActivity : BoundBaseActivity() {
 
         initObservers()
         binding.apply {
+            swipeRefreshLayout.isEnabled = false
             loginBtn.setOnClickListener {
                 viewModel.loginUser(
                         usernameInput.text?.trim().toString(),
@@ -60,6 +61,11 @@ class LoginActivity : BoundBaseActivity() {
             }
             errorResult.observe(this@LoginActivity) {
                 longToast(it)
+            }
+            isRefreshingResult.observe(this@LoginActivity) {
+                binding.swipeRefreshLayout.isRefreshing = it
+                binding.loginBtn.isEnabled = !it
+                binding.registerBtn.isEnabled = !it
             }
             loginFormState.observe(this@LoginActivity) {
                 if (it.usernameError != null) {

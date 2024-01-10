@@ -15,15 +15,21 @@ class CreateAccountViewModel @Inject constructor(
 
     val successResult by lazy { MutableLiveData<Unit>() }
     val errorResult by lazy { MutableLiveData<String>() }
+    val isRefreshingResult by lazy { MutableLiveData<Boolean>() }
 
     fun createUser(name: String, username: String, password: String) {
+        isRefreshingResult.value = true
         viewModelScope.launch {
             loginRepository.createNewUser(name, username, password)
                 .onSuccess {
                     loginRepository.createNewUser(name, username, password)
                     successResult.postValue(Unit)
+                    isRefreshingResult.postValue(false)
                 }
-                .onFailure { errorResult.postValue(it.localizedMessage) }
+                .onFailure {
+                    errorResult.postValue(it.localizedMessage)
+                    isRefreshingResult.postValue(false)
+                }
         }
     }
 }

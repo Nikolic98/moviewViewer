@@ -39,7 +39,8 @@ class CreateAccountActivity : BoundBaseActivity() {
             toolbar.setNavigationOnClickListener {
                 finish()
             }
-            registerButton.setOnClickListener {
+            swipeRefreshLayout.isEnabled = false
+            registerBtn.setOnClickListener {
                 viewModel.createUser(
                         nameInput.text?.trim().toString(),
                         usernameInput.text?.trim().toString(),
@@ -62,6 +63,10 @@ class CreateAccountActivity : BoundBaseActivity() {
             }
             errorResult.observe(this@CreateAccountActivity) {
                 longToast(it)
+            }
+            isRefreshingResult.observe(this@CreateAccountActivity) {
+                binding.swipeRefreshLayout.isRefreshing = it
+                binding.registerBtn.isEnabled = !it
             }
         }
     }
