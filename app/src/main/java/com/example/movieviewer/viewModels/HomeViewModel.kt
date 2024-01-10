@@ -44,13 +44,13 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
                 genreListData = it
             }.onFailure {
                 isRefreshingResult.postValue(false)
-                errorResult.postValue(it.message)
+                errorResult.postValue(it.localizedMessage)
             }
             banner.await().onSuccess {
                 _banner.postValue(it)
             }.onFailure {
                 isRefreshingResult.postValue(false)
-                errorResult.postValue(it.message)
+                errorResult.postValue(it.localizedMessage)
             }
             movies.await().onSuccess { movieList ->
                 isRefreshingResult.postValue(false)
@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
                 _movieList.postValue(movieWithHeader)
             }.onFailure {
                 isRefreshingResult.postValue(false)
-                errorResult.postValue(it.message)
+                errorResult.postValue(it.localizedMessage)
             }
         }
     }

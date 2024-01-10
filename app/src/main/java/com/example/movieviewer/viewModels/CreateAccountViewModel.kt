@@ -10,19 +10,20 @@ import javax.inject.Inject
 /**
  * @author Marko Nikolic on 17.8.23.
  */
-class CreateAccountViewModel @Inject constructor(private val loginRepository: UserRepository) : ViewModel() {
+class CreateAccountViewModel @Inject constructor(
+        private val loginRepository: UserRepository) : ViewModel() {
 
     val successResult by lazy { MutableLiveData<Unit>() }
     val errorResult by lazy { MutableLiveData<String>() }
 
     fun createUser(name: String, username: String, password: String) {
         viewModelScope.launch {
-            try {
-                loginRepository.createNewUser(name, username, password)
-                successResult.postValue(Unit)
-            } catch (t: Throwable) {
-                errorResult.postValue(t.localizedMessage)
-            }
+            loginRepository.createNewUser(name, username, password)
+                .onSuccess {
+                    loginRepository.createNewUser(name, username, password)
+                    successResult.postValue(Unit)
+                }
+                .onFailure { errorResult.postValue(it.localizedMessage) }
         }
     }
 }

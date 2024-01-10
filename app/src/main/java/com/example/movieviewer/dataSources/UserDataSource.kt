@@ -4,8 +4,6 @@ import android.content.Context
 import com.example.movieviewer.R
 import com.example.movieviewer.content.AppErrorObject
 import com.example.movieviewer.models.User
-import com.example.movieviewer.viewModels.results.ResultState
-import com.example.movieviewer.viewModels.results.SuccessResultState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
@@ -44,26 +42,17 @@ class UserDataSource {
         }
     }
 
-    suspend fun createNewUser(name: String, username: String, password: String): ResultState {
+    suspend fun createNewUser(name: String, username: String, password: String): Result<Unit> {
         return suspendCoroutine { continuation ->
             auth.createUserWithEmailAndPassword(username, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val currentUser = auth.currentUser
-                        saveUser(currentUser!!.uid, name, username)
-                        continuation.resume(SuccessResultState(Unit))
-                    } else {
-                        val input = task.exception?.message!!
-                        val startIndex = input.indexOf('[')
-                        val endIndex = input.indexOf(']')
-                        val errorMessage = if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
-                            input.substring(startIndex + 1, endIndex)
-                        } else {
-                            input
-                        }
-                        continuation.resumeWithException(
-                                AppErrorObject(errorMessage).joinForThrowable())
-                    }
+                .addOnSuccessListener {
+                    val currentUser = auth.currentUser
+                    saveUser(currentUser!!.uid, name, username)
+                    continuation.resume(Result.success(Unit))
+                }
+                .addOnFailureListener {
+                    continuation.resume(
+                            Result.failure(AppErrorObject(it.localizedMessage).joinForThrowable()))
                 }
         }
     }
@@ -90,7 +79,7 @@ class UserDataSource {
         }
     }
 
-    suspend fun addOrRemoveFromWatchlist(context: Context, id: String): ResultState {
+    suspend fun addOrRemoveFromWatchlist(context: Context, id: String): Result<String> {
         return suspendCoroutine { continuation ->
             val currentUser = auth.currentUser
             db.collection(USERS)
@@ -111,17 +100,17 @@ class UserDataSource {
                             .document(documentSnapshot.id)
                             .update(WATCHLIST, addOrRemove)
                             .addOnSuccessListener {
-                                continuation.resume(SuccessResultState(addOrRemoveMessage))
+                                continuation.resume(Result.success(addOrRemoveMessage))
                             }
                             .addOnFailureListener {
-                                continuation.resumeWithException(
-                                        AppErrorObject(it.message!!).joinForThrowable())
+                                continuation.resume(Result.failure(
+                                        AppErrorObject(it.localizedMessage).joinForThrowable()))
                             }
                     }
                 }
                 .addOnFailureListener {
                     continuation.resumeWithException(
-                            AppErrorObject(it.message!!).joinForThrowable())
+                            AppErrorObject(it.localizedMessage).joinForThrowable())
                 }
         }
     }
@@ -141,7 +130,7 @@ class UserDataSource {
                 }
                 .addOnFailureListener {
                     continuation.resume(
-                            Result.failure(AppErrorObject(it.message!!).joinForThrowable()))
+                            Result.failure(AppErrorObject(it.localizedMessage).joinForThrowable()))
                 }
         }
     }
@@ -161,7 +150,7 @@ class UserDataSource {
                 }
                 .addOnFailureListener {
                     continuation.resume(
-                            Result.failure(AppErrorObject(it.message!!).joinForThrowable()))
+                            Result.failure(AppErrorObject(it.localizedMessage).joinForThrowable()))
                 }
         }
     }

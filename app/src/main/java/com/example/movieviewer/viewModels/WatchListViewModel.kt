@@ -33,12 +33,12 @@ class WatchListViewModel @Inject constructor(
                     _movieData.postValue(it)
                     isRefreshingResult.postValue(false)
                 }.onFailure {
-                    errorResult.postValue(it.message)
+                    errorResult.postValue(it.localizedMessage)
                     isRefreshingResult.postValue(false)
                 }
             }
             moviesIds.onFailure {
-                errorResult.postValue(it.message)
+                errorResult.postValue(it.localizedMessage)
                 isRefreshingResult.postValue(false)
             }
         }

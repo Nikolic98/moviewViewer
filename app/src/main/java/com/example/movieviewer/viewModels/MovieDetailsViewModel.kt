@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.movieviewer.models.Movie
 import com.example.movieviewer.repositories.MovieRepository
 import com.example.movieviewer.repositories.UserRepository
-import com.example.movieviewer.viewModels.results.SuccessResultState
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,21 +36,18 @@ class MovieDetailsViewModel @Inject constructor(
                 doesWatchlistContainMovie()
             }
             result.onFailure {
-                errorResult.postValue(it.message)
+                errorResult.postValue(it.localizedMessage)
             }
         }
     }
 
     fun addOrRemoveFromWatchlist(context: Context) {
         viewModelScope.launch {
-            try {
-                val result = userRepository.addOrRemoveFromWatchlist(context, movieData.value!!.id)
-                if (result is SuccessResultState<*>) {
-                    addToWatchListResult.postValue(result.result as String)
-                    doesWatchlistContainMovie()
-                }
-            } catch (t: Throwable) {
-                errorResult.postValue(t.localizedMessage)
+            userRepository.addOrRemoveFromWatchlist(context, movieData.value!!.id).onSuccess {
+                addToWatchListResult.postValue(it)
+                doesWatchlistContainMovie()
+            }.onFailure {
+                errorResult.postValue(it.localizedMessage)
             }
         }
     }
