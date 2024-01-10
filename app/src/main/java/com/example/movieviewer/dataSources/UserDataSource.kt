@@ -3,7 +3,6 @@ package com.example.movieviewer.dataSources
 import android.content.Context
 import com.example.movieviewer.R
 import com.example.movieviewer.content.AppErrorObject
-import com.example.movieviewer.models.LoggedInUser
 import com.example.movieviewer.models.User
 import com.example.movieviewer.viewModels.results.ResultState
 import com.example.movieviewer.viewModels.results.SuccessResultState
@@ -27,23 +26,19 @@ class UserDataSource {
 
     companion object {
         private const val USERS = "/users"
-        private const val USER_ID = "userId"
+        private const val USER_ID = "id"
         private const val WATCHLIST = "watchList"
     }
 
-    suspend fun loginUser(username: String, password: String): ResultState {
+    suspend fun loginUser(username: String, password: String): Result<Unit> {
         return suspendCoroutine { continuation ->
             auth.signInWithEmailAndPassword(username, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        val currentUser = auth.currentUser
-                        val user = LoggedInUser(
-                                currentUser!!.uid,
-                                currentUser.email!!)
-                        continuation.resume(SuccessResultState(user))
+                        continuation.resume(Result.success(Unit))
                     } else {
-                        continuation.resumeWithException(
-                                AppErrorObject(task.exception?.message!!).joinForThrowable())
+                        continuation.resume(Result.failure(
+                                AppErrorObject(task.exception?.message!!).joinForThrowable()))
                     }
                 }
         }
@@ -84,9 +79,10 @@ class UserDataSource {
                 .whereEqualTo(USER_ID, currentUser!!.uid)
                 .get()
                 .addOnSuccessListener {
-                    val documentSnapshot = it.documents[0]
-                    val user = documentSnapshot.toObject(User::class.java)
-                    continuation.resume(Result.success(user!!))
+                    it.documents.forEach { documentSnapshot ->
+                        val user = documentSnapshot.toObject(User::class.java)
+                        continuation.resume(Result.success(user!!))
+                    }
                 }
                 .addOnFailureListener {
                     continuation.resume(Result.failure(it))
@@ -173,5 +169,31 @@ class UserDataSource {
     private fun saveUser(userId: String, name: String, username: String) {
         val user = User(userId, username, name, arrayListOf())
         db.collection(USERS).add(user)
+    }
+
+    suspend fun deleteUser(): Result<Unit> {
+        return suspendCoroutine { continuation ->
+            auth.currentUser?.let { firebaseUser ->
+                db.collection(USERS)
+                    .whereEqualTo(USER_ID, firebaseUser.uid)
+                    .get()
+                    .addOnSuccessListener { query ->
+                        query.documents.forEach {
+                            it.reference.delete()
+                        }
+                        firebaseUser.delete().addOnSuccessListener {
+                            continuation.resume(Result.success(Unit))
+                        }.addOnFailureListener {
+                            continuation.resume(Result.failure(
+                                    AppErrorObject(it.localizedMessage).joinForThrowable()))
+                        }
+                    }
+                    .addOnFailureListener {
+                        continuation.resume(
+                                Result.failure(
+                                        AppErrorObject(it.localizedMessage).joinForThrowable()))
+                    }
+            }
+        }
     }
 }

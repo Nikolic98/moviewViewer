@@ -28,12 +28,9 @@ class LoginViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
-            try {
-                loginRepository.loginUser(username, password)
-                successResult.postValue(Unit)
-            } catch (t: Throwable) {
-                errorResult.postValue(t.localizedMessage)
-            }
+            loginRepository.loginUser(username, password)
+                .onSuccess { successResult.postValue(Unit) }
+                .onFailure { errorResult.postValue(it.localizedMessage) }
         }
     }
 

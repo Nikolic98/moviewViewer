@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.movieviewer.MovieViewerApplication
 import com.example.movieviewer.activities.login.LoginActivity
 import com.example.movieviewer.databinding.FragmentProfileBinding
+import com.example.movieviewer.longToast
 import com.example.movieviewer.viewModels.ProfileViewModel
 import com.example.movieviewer.viewModels.ViewModelFactory
 import javax.inject.Inject
@@ -33,24 +34,33 @@ class ProfileFragment : BoundBaseFragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this,
                 viewModelFactory)[ProfileViewModel::class.java.name, ProfileViewModel::class.java]
-        initObservers()
 
-        viewModel.getCurrentUser()
+        initObservers()
+        viewModel.getCurrentUser(requireActivity())
 
         binding.logoutBtn.setOnClickListener {
             viewModel.logoutUser()
+        }
+        binding.deleteBtn.setOnClickListener {
+            viewModel.deleteUser()
         }
         return binding.root
     }
 
     private fun initObservers() {
         viewModel.apply {
-            text.observe(viewLifecycleOwner) {
-                binding.text.text = it
+            userEmail.observe(viewLifecycleOwner) {
+                binding.emailText.text = it
             }
-            successResult.observe(viewLifecycleOwner) {
+            logoutActionResult.observe(viewLifecycleOwner) {
                 startActivity(Intent(activity, LoginActivity::class.java))
                 activity?.finish()
+            }
+            isRefreshingResult.observe(viewLifecycleOwner) {
+                binding.swipeRefreshLayout.isRefreshing = it
+            }
+            errorResult.observe(viewLifecycleOwner) {
+                activity?.longToast(it)
             }
         }
     }
