@@ -27,10 +27,6 @@
             android:name=".activities.login.LoginActivity"
             android:exported="false"/>
         <activity
-            android:name=".activities.login.LoginTestActivity"
-            android:exported="false"
-            android:label="@string/title_activity_login"/>
-        <activity
             android:name=".MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan"/>

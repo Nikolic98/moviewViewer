@@ -1,6 +1,6 @@
 package com.example.movieviewer.modules
 
-import com.example.movieviewer.dataSources.HomeDataSource
+import com.example.movieviewer.dataSources.BannerDataSource
 import com.example.movieviewer.dataSources.UserDataSource
 import com.example.movieviewer.dataSources.MovieDataSource
 import dagger.Module
@@ -19,7 +19,7 @@ class DataSourceModule {
 
     @Provides
     @Singleton
-    fun provideHomeDataSource() = HomeDataSource()
+    fun provideHomeDataSource() = BannerDataSource()
 
     @Provides
     @Singleton

@@ -1,9 +1,9 @@
 package com.example.movieviewer.modules
 
-import com.example.movieviewer.dataSources.HomeDataSource
+import com.example.movieviewer.dataSources.BannerDataSource
 import com.example.movieviewer.dataSources.UserDataSource
 import com.example.movieviewer.dataSources.MovieDataSource
-import com.example.movieviewer.repositories.HomeRepository
+import com.example.movieviewer.repositories.BannerRepository
 import com.example.movieviewer.repositories.UserRepository
 import com.example.movieviewer.repositories.MovieRepository
 import dagger.Module
@@ -23,7 +23,7 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideHomeRepository(homeDataSource: HomeDataSource) = HomeRepository(homeDataSource)
+    fun provideHomeRepository(homeDataSource: BannerDataSource) = BannerRepository(homeDataSource)
 
     @Provides
     @Singleton

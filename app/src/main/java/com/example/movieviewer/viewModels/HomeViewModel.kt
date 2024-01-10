@@ -8,7 +8,7 @@ import com.example.movieviewer.models.Banner
 import com.example.movieviewer.models.Genre
 import com.example.movieviewer.models.ItemWithHeader
 import com.example.movieviewer.models.Movie
-import com.example.movieviewer.repositories.HomeRepository
+import com.example.movieviewer.repositories.BannerRepository
 import com.example.movieviewer.repositories.MovieRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ import javax.inject.Inject
 /**
  * @author Marko Nikolic on 18.8.23.
  */
-class HomeViewModel @Inject constructor(private val homeRepository: HomeRepository,
+class HomeViewModel @Inject constructor(private val homeRepository: BannerRepository,
         private val movieRepository: MovieRepository) : ViewModel() {
 
     private val _movieList = MutableLiveData<ArrayList<ItemWithHeader>>()

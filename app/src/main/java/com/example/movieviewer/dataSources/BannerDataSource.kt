@@ -9,7 +9,7 @@ import kotlin.coroutines.suspendCoroutine
 /**
  * @author Marko Nikolic on 30.8.23.
  */
-class HomeDataSource {
+class BannerDataSource {
 
     private val db = Firebase.firestore
 
