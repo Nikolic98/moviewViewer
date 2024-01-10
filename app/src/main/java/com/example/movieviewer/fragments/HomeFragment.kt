@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.movieviewer.MovieViewerApplication
 import com.example.movieviewer.activities.MovieDetailsActivity
 import com.example.movieviewer.adapters.BannerAdapter
@@ -16,6 +17,12 @@ import com.example.movieviewer.interfaces.ItemClickListener
 import com.example.movieviewer.longToast
 import com.example.movieviewer.viewModels.HomeViewModel
 import com.example.movieviewer.viewModels.ViewModelFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -28,6 +35,10 @@ class HomeFragment : BoundBaseFragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: HomeViewModel
+
+    private lateinit var bannerAdapter: BannerAdapter
+    private var currentBannerItem = 0
+    private var autoScrollJob: Job? = null
 
     override fun injectFragment() {
         MovieViewerApplication[requireActivity()].getAppComponent().inject(this)
@@ -63,12 +74,13 @@ class HomeFragment : BoundBaseFragment() {
         viewModel.apply {
             // refactor from recyclerView to ViewPager
             banner.observe(viewLifecycleOwner) {
-                binding.recyclerViewBanner.adapter = BannerAdapter(it,
+                bannerAdapter = BannerAdapter(it,
                         object : ItemClickListener {
                             override fun onItemClick(id: String) {
                                 startDetails(id)
                             }
                         })
+                binding.recyclerViewBanner.adapter = bannerAdapter
             }
             movieList.observe(viewLifecycleOwner) {
                 binding.recyclerView.adapter = MovieCardAdapter(it,
@@ -97,6 +109,35 @@ class HomeFragment : BoundBaseFragment() {
 
     private fun startDetails(movieId: String) {
         startActivity(MovieDetailsActivity.newInstance(requireActivity(), movieId))
+    }
+
+    private fun startAutoScroll() {
+        autoScrollJob = lifecycleScope.launch {
+            while (isActive) {
+                delay(3000)
+
+                withContext(Dispatchers.Main) {
+                    if (bannerAdapter.itemCount > 0) {
+                        if (currentBannerItem == bannerAdapter.itemCount - 1) {
+                            currentBannerItem = 0
+                        } else {
+                            currentBannerItem++
+                        }
+                        binding.recyclerViewBanner.smoothScrollToPosition(currentBannerItem)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        startAutoScroll()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        autoScrollJob?.cancel()
     }
 
     override fun onDestroy() {
