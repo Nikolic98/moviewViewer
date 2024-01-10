@@ -16,6 +16,7 @@ class MovieDataSource {
 
     companion object {
         private const val MOVIES = "/movies"
+        private const val NAME_FIELD_PATH = "name"
     }
 
     suspend fun getMovie(movieId: String): Result<Movie> {
@@ -61,6 +62,27 @@ class MovieDataSource {
     suspend fun getAllMovies(): Result<ArrayList<Movie>> {
         return suspendCoroutine { continuation ->
             db.collection(MOVIES)
+                .get()
+                .addOnSuccessListener {
+                    val movies = arrayListOf<Movie>()
+                    it.documents.forEach { documentSnapshot ->
+                        documentSnapshot.toObject(Movie::class.java)?.let { movie ->
+                            movies.add(movie)
+                        }
+                    }
+                    continuation.resume(Result.success(movies))
+                }
+                .addOnFailureListener {
+                    continuation.resume(Result.failure(it))
+                }
+        }
+    }
+
+    suspend fun getMoviesByName(name: String): Result<ArrayList<Movie>> {
+        return suspendCoroutine { continuation ->
+            db.collection(MOVIES)
+                .whereGreaterThanOrEqualTo(NAME_FIELD_PATH, name)
+                .whereLessThanOrEqualTo(NAME_FIELD_PATH, "$name\uf8ff")
                 .get()
                 .addOnSuccessListener {
                     val movies = arrayListOf<Movie>()

@@ -4,10 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieviewer.MovieViewerApplication
+import com.example.movieviewer.activities.MovieDetailsActivity
+import com.example.movieviewer.adapters.ItemWithNameCardAdapter
 import com.example.movieviewer.databinding.FragmentSearchBinding
+import com.example.movieviewer.interfaces.ItemClickListener
+import com.example.movieviewer.longToast
 import com.example.movieviewer.viewModels.SearchViewModel
 import com.example.movieviewer.viewModels.ViewModelFactory
 import javax.inject.Inject
@@ -32,11 +36,35 @@ class SearchFragment : BoundBaseFragment() {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this,
                 viewModelFactory)[SearchViewModel::class.java.name, SearchViewModel::class.java]
-        val textView: TextView = binding.text
-        viewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+
+        binding.searchBar.hint = "Search"
+        binding.searchView.hint = "Type a movie name"
+        binding.searchView.setupWithSearchBar(binding.searchBar)
+
+        binding.searchView.editText.addTextChangedListener {
+            viewModel.searchMovie(it.toString().trim())
         }
+
+        initObservers()
         return binding.root
+    }
+
+    private fun initObservers() {
+        viewModel.apply {
+            movieData.observe(viewLifecycleOwner) {
+                binding.recyclerView.adapter = ItemWithNameCardAdapter(it,
+                        object : ItemClickListener {
+                            override fun onItemClick(id: String) {
+                                startActivity(
+                                        MovieDetailsActivity.newInstance(requireActivity(), id))
+                            }
+                        })
+            }
+
+            errorResult.observe(viewLifecycleOwner) {
+                requireActivity().longToast(it)
+            }
+        }
     }
 
     override fun onDestroy() {
