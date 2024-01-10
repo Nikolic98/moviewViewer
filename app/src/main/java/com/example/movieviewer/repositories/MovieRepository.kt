@@ -7,6 +7,8 @@ import com.example.movieviewer.dataSources.MovieDataSource
  */
 class MovieRepository(private val dataSource: MovieDataSource) {
 
+    suspend fun getMovieGenres() = dataSource.getMovieGenres()
+
     suspend fun getMovie(movieId: String) = dataSource.getMovie(movieId)
 
     suspend fun getMovies(movieIds: List<String>) = dataSource.getMovies(movieIds)

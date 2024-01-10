@@ -1,5 +1,6 @@
 package com.example.movieviewer.dataSources
 
+import com.example.movieviewer.models.Genre
 import com.example.movieviewer.models.Movie
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.ktx.firestore
@@ -16,7 +17,27 @@ class MovieDataSource {
 
     companion object {
         private const val MOVIES = "/movies"
+        private const val GENRES = "/movie_genres"
         private const val NAME_FIELD_PATH = "name"
+    }
+
+    suspend fun getMovieGenres(): Result<ArrayList<Genre>> {
+        return suspendCoroutine { continuation ->
+            db.collection(GENRES)
+                .get()
+                .addOnSuccessListener {
+                    val genres = arrayListOf<Genre>()
+                    it.documents.forEach { documentSnapshot ->
+                        documentSnapshot.toObject(Genre::class.java)?.let { genre ->
+                            genres.add(genre)
+                        }
+                    }
+                    continuation.resume(Result.success(genres))
+                }
+                .addOnFailureListener {
+                    continuation.resume(Result.failure(it))
+                }
+        }
     }
 
     suspend fun getMovie(movieId: String): Result<Movie> {

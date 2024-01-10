@@ -10,11 +10,13 @@ import androidx.lifecycle.lifecycleScope
 import com.example.movieviewer.MovieViewerApplication
 import com.example.movieviewer.activities.MovieDetailsActivity
 import com.example.movieviewer.adapters.BannerAdapter
+import com.example.movieviewer.adapters.ItemWithHeaderAdapter
 import com.example.movieviewer.adapters.ItemWithNameCardAdapter
 import com.example.movieviewer.adapters.MovieCardAdapter
 import com.example.movieviewer.databinding.FragmentHomeBinding
 import com.example.movieviewer.interfaces.ItemClickListener
 import com.example.movieviewer.longToast
+import com.example.movieviewer.models.ItemWithHeader
 import com.example.movieviewer.viewModels.HomeViewModel
 import com.example.movieviewer.viewModels.ViewModelFactory
 import kotlinx.coroutines.Dispatchers
@@ -83,7 +85,7 @@ class HomeFragment : BoundBaseFragment() {
                 binding.recyclerViewBanner.adapter = bannerAdapter
             }
             movieList.observe(viewLifecycleOwner) {
-                binding.recyclerView.adapter = MovieCardAdapter(it,
+                binding.recyclerView.adapter = ItemWithHeaderAdapter(it,
                         object : ItemClickListener {
                             override fun onItemClick(id: String) {
                                 startDetails(id)

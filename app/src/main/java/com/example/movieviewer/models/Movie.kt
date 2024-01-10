@@ -7,5 +7,6 @@ data class Movie(
         val id: String = String(),
         val name: String = String(),
         val description: String = String(),
-        val imageUrl: String = String()
+        val imageUrl: String = String(),
+        val genreId: String = String()
 )
