@@ -68,6 +68,17 @@ class CreateAccountActivity : BoundBaseActivity() {
                 binding.swipeRefreshLayout.isRefreshing = it
                 binding.registerBtn.isEnabled = !it
             }
+            createAccountFormState.observe(this@CreateAccountActivity) {
+                if (it.nameError != null) {
+                    binding.nameInput.error = getString(it.nameError)
+                }
+                if (it.usernameError != null) {
+                    binding.usernameInput.error = getString(it.usernameError)
+                }
+                if (it.passwordError != null) {
+                    binding.passwordInput.error = getString(it.passwordError)
+                }
+            }
         }
     }
 }

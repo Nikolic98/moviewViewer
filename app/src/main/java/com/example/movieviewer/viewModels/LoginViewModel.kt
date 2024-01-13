@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieviewer.R
 import com.example.movieviewer.repositories.UserRepository
+import com.example.movieviewer.utils.TextValidationHelper
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -47,34 +48,18 @@ class LoginViewModel @Inject constructor(
         var usernameError: Int? = null
         var passwordError: Int? = null
         var isDataValid = true
-        if (!isUsernameValid(username)) {
+        if (!TextValidationHelper.isUsernameValid(username)) {
             isDataValid = false
             usernameError = R.string.invalid_username
         }
 
-        if (!isPasswordValid(password)) {
+        if (!TextValidationHelper.isPasswordValid(password)) {
             isDataValid = false
             passwordError = R.string.invalid_password
         }
 
         _loginForm.value = LoginFormState(usernameError, passwordError, isDataValid)
     }
-
-    // A placeholder username validation check
-    private fun isUsernameValid(username: String): Boolean {
-        return if (username.isNotBlank()) {
-            if (username.contains('@')) {
-                Patterns.EMAIL_ADDRESS.matcher(username).matches()
-            } else {
-                false
-            }
-        } else {
-            false
-        }
-    }
-
-    // A placeholder password validation check
-    private fun isPasswordValid(password: String) = password.length > 5
 }
 
 data class LoginFormState(
