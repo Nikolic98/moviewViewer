@@ -33,13 +33,4 @@ object PrefHelper : AppPrefHelper() {
         editor.clear()
         editor.apply()
     }
-
-    fun saveToken(token: String?) {
-        putString(TOKEN, token)
-    }
-
-    fun getToken() = getString(TOKEN)
-
-    val isTokenSaved: Boolean
-        get() = getToken().isNotEmpty()
 }
