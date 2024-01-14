@@ -7,7 +7,7 @@ import android.content.SharedPreferences
  * @author Marko Nikolic on 16.8.23.
  */
 object PrefHelper : AppPrefHelper() {
-    private const val TOKEN = "prefs:account_token"
+    
     private var prefs: SharedPreferences? = null
     fun initPrefs(context: Context, name: String?, mode: Int) {
         prefs = context.getSharedPreferences(name, mode)
